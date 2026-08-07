@@ -1,6 +1,6 @@
 # HardwareMonitor Dashboard
 
-User Guide – Comprehensive documentation for monitoring your computer hardware metrics in real time.
+Lightweight hardware monitoring for your computer hardware in real time.
 
 ## 1. System Requirements & Setup
 
