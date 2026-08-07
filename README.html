@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="meta_title">HardwareMonitor Dashboard – User Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --card: #121212;
+            --card-sub: #1a1a1a;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.15);
+            --accent-hover: #0ea5e9;
+            --text: #f8fafc;
+            --muted: #737373;
+            --border: #262626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .lang-select {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .lang-select:hover {
+            border-color: var(--accent);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        h1 span { color: var(--accent); }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: var(--muted);
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .section-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .section-box h2 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-box h2 span.accent {
+            color: var(--accent);
+        }
+
+        p, ul, ol {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 14px;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        li strong {
+            color: var(--text);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 20px;
+            border-top: 1px solid var(--border);
+            padding-top: 30px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="top-bar">
+            <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
+                <option value="en">🇬🇧 English</option>
+                <option value="fi">🇫🇮 Suomi</option>
+                <option value="sv">🇸🇪 Svenska</option>
+                <option value="de">🇩🇪 Deutsch</option>
+            </select>
+        </div>
+
+        <header>
+            <h1 data-i18n="title">HardwareMonitor <span>Dashboard</span></h1>
+            <p class="subtitle" data-i18n="subtitle">User Guide – Comprehensive documentation for monitoring your computer hardware metrics in real time.</p>
+        </header>
+
+        <!-- Section 1 -->
+        <div class="section-box">
+            <h2 data-i18n="sec1_title"><span class="accent">1.</span> System Requirements & Setup</h2>
+            <p data-i18n="sec1_desc">To stream metrics into the dashboard, you must have one or both of the following software running in the background with a web server enabled:</p>
+            <ul>
+                <li><strong data-i18n="sec1_hwinfo">HWiNFO:</strong> <span data-i18n="sec1_hwinfo_desc">Download <a href="https://www.hwinfo.com/download/" target="_blank">HWiNFO here</a> and requires the <a href="https://github.com/Demion/remotehwinfo" target="_blank">RemoteHWInfo</a> server enabled.</span></li>
+                <li><strong data-i18n="sec1_lhm">Libre Hardware Monitor (LHM):</strong> <span data-i18n="sec1_lhm_desc">Download <a href="https://github.scom/LibreHardwareMonitor/LibreHardwareMonitor" target="_blank">Libre Hardware Monitor here</a> (requires the built-in Remote Web Server enabled in the settings).</span></li>
+            </ul>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="section-box">
+            <h2 data-i18n="sec2_title"><span class="accent">2.</span> Opening and Managing Settings</h2>
+            <p data-i18n="sec2_desc">To customize the layout, cards, and metrics, click the Settings button in the top right corner.</p>
+            
+            <h3 style="color: var(--text); font-size: 1.05rem; margin: 16px 0 8px 0;" data-i18n="sec2a_title">A. Theme Customization & Presets</h3>
+            <p data-i18n="sec2a_desc">Choose a built-in theme or manually adjust all colors using the color pickers:</p>
+            <ul>
+                <li><strong data-i18n="sec2a_presets">Preset Themes:</strong> <span data-i18n="sec2a_presets_list">Midnight Obsidian, Cyberpunk Neon, Nordic Frost, Clean Light, Retro Console, Matrix Grid.</span></li>
+                <li><strong data-i18n="sec2a_colors">Color Fields:</strong> <span data-i18n="sec2a_colors_desc">Background (--bg), card background (--card), chart sub-containers (--card-sub), accent colors (--accent), as well as text and border colors.</span></li>
+            </ul>
+
+            <h3 style="color: var(--text); font-size: 1.05rem; margin: 16px 0 8px 0;" data-i18n="sec2b_title">B. Connection Settings & Resolution</h3>
+            <ul>
+                <li><span data-i18n="sec2b_firewall">Run included firewall port-opening script if running dashboard on another device on the same network (e.g. tablet).</span></li>
+                <li><strong data-i18n="sec2b_ip">HWiNFO/LHM IP:Port:</strong> <span data-i18n="sec2b_ip_desc">Define the IP addresses and ports for your hardware sources (e.g., HWiNFO 127.0.0.1:60000 and LHM 127.0.0.1:8085).</span></li>
+                <li><strong data-i18n="sec2b_polling">Polling Rate (ms):</strong> <span data-i18n="sec2b_polling_desc">Define how often data is refreshed in milliseconds (e.g., 4000 = 4 seconds). Click Save & Test when finished.</span></li>
+                <li><strong data-i18n="sec2b_res">Resolution Settings:</strong> <span data-i18n="sec2b_res_desc">Choose a preset resolution base or enter a custom width and height to scale the dashboard perfectly for a dedicated sensor display.</span></li>
+            </ul>
+
+            <h3 style="color: var(--text); font-size: 1.05rem; margin: 16px 0 8px 0;" data-i18n="sec2c_title">C. Export and Import Settings</h3>
+            <ul>
+                <li><strong data-i18n="sec2c_export">Export Settings (JSON):</strong> <span data-i18n="sec2c_export_desc">Back up your current layout, cards, and theme to a file.</span></li>
+                <li><strong data-i18n="sec2c_import">Import Settings (JSON):</strong> <span data-i18n="sec2c_import_desc">Restore or load a layout template from a file.</span></li>
+            </ul>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="section-box">
+            <h2 data-i18n="sec3_title"><span class="accent">3.</span> Managing Cards and Metrics</h2>
+            <p data-i18n="sec3_desc">At the bottom of the settings panel, you will find a list of current Cards that you can modify as follows:</p>
+            <ul>
+                <li><strong data-i18n="sec3_order">Card Order:</strong> <span data-i18n="sec3_order_desc">Move cards up or down using the control buttons.</span></li>
+                <li><strong data-i18n="sec3_dim">Card Dimensions:</strong> <span data-i18n="sec3_dim_desc">Use sliders to adjust card width (colSpan 1-12), height, and the number of sensor columns.</span></li>
+                <li><strong data-i18n="sec3_charts">Charts:</strong> <span data-i18n="sec3_charts_desc">Add live line charts to cards for real-time tracking. Choose the desired metric, color, decimal places, and unit conversion (e.g., MHz to GHz or °C to °F).</span></li>
+                <li><strong data-i18n="sec3_alerts">Text Sensors & Alerts:</strong> <span data-i18n="sec3_alerts_desc">Add individual text-based metrics to a card. You can set an alert value threshold; if exceeded, the value turns red and the respective card activates an alert border (alert-active).</span></li>
+            </ul>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="section-box">
+            <h2 data-i18n="sec4_title"><span class="accent">4.</span> Language Selection</h2>
+            <p data-i18n="sec4_desc">You can change the user interface language directly from the top bar dropdown menu. Supported languages include:</p>
+            <ul>
+                <li>English</li>
+                <li>Suomi</li>
+                <li>Svenska</li>
+                <li>Deutsch</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p data-i18n="footer">Vibecoded PC Dashboard • User Guide & Documentation</p>
+        </footer>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                meta_title: "HardwareMonitor Dashboard – User Guide",
+                title: "HardwareMonitor <span>Dashboard</span>",
+                subtitle: "User Guide – Comprehensive documentation for monitoring your computer hardware metrics in real time.",
+                sec1_title: "1. System Requirements & Setup",
+                sec1_desc: "To stream metrics into the dashboard, you must have one or both of the following software running in the background with a web server enabled:",
+                sec1_hwinfo: "HWiNFO:",
+                sec1_hwinfo_desc: "Download <a href=\"https://www.hwinfo.com/download/\" target=\"_blank\">HWiNFO here</a> and requires the <a href=\"https://github.com/Demion/remotehwinfo\" target=\"_blank\">RemoteHWInfo</a> server enabled.",
+                sec1_lhm: "Libre Hardware Monitor (LHM):",
+                sec1_lhm_desc: "Download <a href=\"https://github.com/LibreHardwareMonitor/LibreHardwareMonitor\" target=\"_blank\">Libre Hardware Monitor here</a> (requires the built-in Remote Web Server enabled in the settings).",
+                sec2_title: "2. Opening and Managing Settings",
+                sec2_desc: "To customize the layout, cards, and metrics, click the Settings button in the top right corner.",
+                sec2a_title: "A. Theme Customization & Presets",
+                sec2a_desc: "Choose a built-in theme or manually adjust all colors using the color pickers:",
+                sec2a_presets: "Preset Themes:",
+                sec2a_presets_list: "Midnight Obsidian, Cyberpunk Neon, Nordic Frost, Clean Light, Retro Console, Matrix Grid.",
+                sec2a_colors: "Color Fields:",
+                sec2a_colors_desc: "Background (--bg), card background (--card), chart sub-containers (--card-sub), accent colors (--accent), as well as text and border colors.",
+                sec2b_title: "B. Connection Settings & Resolution",
+                sec2b_firewall: "Run included firewall port-opening script if running dashboard on another device on the same network (e.g. tablet).",
+                sec2b_ip: "HWiNFO/LHM IP:Port:",
+                sec2b_ip_desc: "Define the IP addresses and ports for your hardware sources (e.g., HWiNFO 127.0.0.1:60000 and LHM 127.0.0.1:8085).",
+                sec2b_polling: "Polling Rate (ms):",
+                sec2b_polling_desc: "Define how often data is refreshed in milliseconds (e.g., 4000 = 4 seconds). Click Save & Test when finished.",
+                sec2b_res: "Resolution Settings:",
+                sec2b_res_desc: "Choose a preset resolution base or enter a custom width and height to scale the dashboard perfectly for a dedicated sensor display.",
+                sec2c_title: "C. Export and Import Settings",
+                sec2c_export: "Export Settings (JSON):",
+                sec2c_export_desc: "Back up your current layout, cards, and theme to a file.",
+                sec2c_import: "Import Settings (JSON):",
+                sec2c_import_desc: "Restore or load a layout template from a file.",
+                sec3_title: "3. Managing Cards and Metrics",
+                sec3_desc: "At the bottom of the settings panel, you will find a list of current Cards that you can modify as follows:",
+                sec3_order: "Card Order:",
+                sec3_order_desc: "Move cards up or down using the control buttons.",
+                sec3_dim: "Card Dimensions:",
+                sec3_dim_desc: "Use sliders to adjust card width (colSpan 1-12), height, and the number of sensor columns.",
+                sec3_charts: "Charts:",
+                sec3_charts_desc: "Add live line charts to cards for real-time tracking. Choose the desired metric, color, decimal places, and unit conversion (e.g., MHz to GHz or °C to °F).",
+                sec3_alerts: "Text Sensors & Alerts:",
+                sec3_alerts_desc: "Add individual text-based metrics to a card. You can set an alert value threshold; if exceeded, the value turns red and the respective card activates an alert border (alert-active).",
+                sec4_title: "4. Language Selection",
+                sec4_desc: "You can change the user interface language directly from the top bar dropdown menu. Supported languages include:",
+                footer: "HardwareMonitor Dashboard • User Guide & Documentation"
+            },
+            fi: {
+                meta_title: "HardwareMonitor Dashboard – Käyttöopas",
+                title: "HardwareMonitor <span>Dashboard</span>",
+                subtitle: "Käyttöopas – Kattava ohje tietokoneen laitteistomittausten reaaliaikaiseen seurantaan.",
+                sec1_title: "1. Järjestelmävaatimukset ja asennus",
+                sec1_desc: "Jotta mittaustietoja voidaan välittää paneeliin, taustalla täytyy olla käynnissä vähintään toinen seuraavista ohjelmista verkkopalvelin aktivoituna:",
+                sec1_hwinfo: "HWiNFO:",
+                sec1_hwinfo_desc: "Lataa <a href=\"https://www.hwinfo.com/download/\" target=\"_blank\">HWiNFO täältä</a> ja ota käyttöön <a href=\"https://github.com/Demion/remotehwinfo\" target=\"_blank\">RemoteHWInfo</a>-palvelin.",
+                sec1_lhm: "Libre Hardware Monitor (LHM):",
+                sec1_lhm_desc: "Lataa <a href=\"https://github.com/LibreHardwareMonitor/LibreHardwareMonitor\" target=\"_blank\">Libre Hardware Monitor täältä</a> (vaatii sisäänrakennetun etäverkkopalvelimen aktivoinnin asetuksista).",
+                sec2_title: "2. Asetusten avaaminen ja hallinta",
+                sec2_desc: "Mukauttaaksesi ulkoasua, kortteja ja mittareita, klikkaa Asetukset-painiketta oikeassa yläkulmassa.",
+                sec2a_title: "A. Teemojen mukautus ja esiasetukset",
+                sec2a_desc: "Valitse valmis teema tai säädä kaikkia värejä manuaalisesti värivalitsimilla:",
+                sec2a_presets: "Valmiit teemat:",
+                sec2a_presets_list: "Midnight Obsidian, Cyberpunk Neon, Nordic Frost, Clean Light, Retro Console, Matrix Grid.",
+                sec2a_colors: "Värikentät:",
+                sec2a_colors_desc: "Tausta (--bg), kortin tausta (--card), kaavioiden alikontit (--card-sub), korostusvärit (--accent) sekä teksti- ja reunavärit.",
+                sec2b_title: "B. Yhteysasetukset ja resoluutio",
+                sec2b_firewall: "Suorita mukana tuleva palomuuriskripti, jos ajat dashboardia toisella laitteella samassa verkossa (esim. tabletilla).",
+                sec2b_ip: "HWiNFO/LHM IP:Portti:",
+                sec2b_ip_desc: "Määritä laitteistolähteiden IP-osoitteet ja portit (esim. HWiNFO 127.0.0.1:60000 ja LHM 127.0.0.1:8085).",
+                sec2b_polling: "Päivitysväli (ms):",
+                sec2b_polling_desc: "Määritä kuinka usein tiedot päivitetään millisekunneissa (esim. 4000 = 4 sekuntia). Klikkaa Tallenna ja testaa kun olet valmis.",
+                sec2b_res: "Resoluutioasetukset:",
+                sec2b_res_desc: "Valitse valmis resoluutiopohja tai syötä mukautettu leveys ja korkeus skaalataksesi paneelin täydellisesti erilliselle sensorinäytölle.",
+                sec2c_title: "C. Asetuksien vienti ja tuonti",
+                sec2c_export: "Vie asetukset (JSON):",
+                sec2c_export_desc: "Varmuuskopioi nykyinen ulkoasu, kortit ja teema tiedostoon.",
+                sec2c_import: "Tuo asetukset (JSON):",
+                sec2c_import_desc: "Palauta tai lataa asettelupohja tiedostosta.",
+                sec3_title: "3. Korttien ja mittarien hallinta",
+                sec3_desc: "Asetuspaneelin alaosasta löydät listan nykyisistä korteista, joita voit muokata seuraavasti:",
+                sec3_order: "Korttien järjestys:",
+                sec3_order_desc: "Siirrä kortteja ylös tai alas ohjauspainikkeilla.",
+                sec3_dim: "Korttien mitat:",
+                sec3_dim_desc: "Käytä liukusäätimiä kortin leveyden (colSpan 1-12), korkeuden ja sensorisarakkeiden määrän säätämiseen.",
+                sec3_charts: "Kaaviot:",
+                sec3_charts_desc: "Lisää eläviä viivakaavioita kortteihin reaaliaikaista seurantaa varten. Valitse haluttu mittari, väri, desimaalit ja yksikkömuunnos (esim. MHz -> GHz tai °C -> °F).",
+                sec3_alerts: "Tekstisensorit ja hälytykset:",
+                sec3_alerts_desc: "Lisää yksittäisiä tekstipohjaisia mittareita korttiin. Voit asettaa arvorajan hälytykselle; jos raja ylitetään, arvo muuttuu punaiseksi ja kyseinen kortti aktivoi hälytysreunan (alert-active).",
+                sec4_title: "4. Kielen valinta",
+                sec4_desc: "Voit vaihtaa käyttöliittymän kieltä suoraan yläpalkin pudotusvalikosta. Tuetut kielet:",
+                footer: "HardwareMonitor Dashboard • Käyttöopas ja dokumentaatio"
+            },
+            sv: {
+                meta_title: "HardwareMonitor Dashboard – Användarguide",
+                title: "HardwareMonitor <span>Dashboard</span>",
+                subtitle: "Användarguide – Omfattande dokumentation för övervakning av hårdvarumetrik i realtid.",
+                sec1_title: "1. Systemkrav och installation",
+                sec1_desc: "För att strömma mätvärden till instrumentpanelen måste du ha en eller båda av följande programvaror körande i bakgrunden med en webbserver aktiverad:",
+                sec1_hwinfo: "HWiNFO:",
+                sec1_hwinfo_desc: "Ladda ner <a href=\"https://www.hwinfo.com/download/\" target=\"_blank\">HWiNFO här</a> och aktivera <a href=\"https://github.com/Demion/remotehwinfo\" target=\"_blank\">RemoteHWInfo</a>-servern.",
+                sec1_lhm: "Libre Hardware Monitor (LHM):",
+                sec1_lhm_desc: "Ladda ner <a href=\"https://github.com/LibreHardwareMonitor/LibreHardwareMonitor\" target=\"_blank\">Libre Hardware Monitor här</a> (kräver att den inbyggda webbservern är aktiverad i inställningarna).",
+                sec2_title: "2. Öppna och hantera inställningar",
+                sec2_desc: "Klicka på inställningsknappen i det övre högra hörnet för att anpassa layout, kort och mätvärden.",
+                sec2a_title: "A. Temanpassning & Förval",
+                sec2a_desc: "Välj ett inbyggt tema eller justera alla färger manuellt med färgväljarna:",
+                sec2a_presets: "Förinställda teman:",
+                sec2a_presets_list: "Midnight Obsidian, Cyberpunk Neon, Nordic Frost, Clean Light, Retro Console, Matrix Grid.",
+                sec2a_colors: "Färgfält:",
+                sec2a_colors_desc: "Bakgrund (--bg), kortbakgrund (--card), diagrambehållare (--card-sub), accentfärger (--accent) samt text- och ramfärger.",
+                sec2b_title: "B. Anslutningsinställningar & Upplösning",
+                sec2b_firewall: "Kör medföljande brandväggsskript om du kör instrumentpanelen på en annan enhet i samma nätverk (t.ex. surfplatta).",
+                sec2b_ip: "HWiNFO/LHM IP:Port:",
+                sec2b_ip_desc: "Ange IP-adresser och portar för dina hårdvarukällor (t.ex. HWiNFO 127.0.0.1:60000 och LHM 127.0.0.1:8085).",
+                sec2b_polling: "Uppdateringsfrekvens (ms):",
+                sec2b_polling_desc: "Ange hur ofta data uppdateras i millisekunder (t.ex. 4000 = 4 sekunder). Klicka på Spara & Testa när du är klar.",
+                sec2b_res: "Upplösningsinställningar:",
+                sec2b_res_desc: "Välj en förinställd upplösning eller ange egen bredd och höjd för att skala instrumentpanelen perfekt för en dedikerad skärm.",
+                sec2c_title: "C. Exportera och importera inställningar",
+                sec2c_export: "Exportera inställningar (JSON):",
+                sec2c_export_desc: "Säkerhetskopiera din nuvarande layout, dina kort och ditt tema till en fil.",
+                sec2c_import: "Importera inställningar (JSON):",
+                sec2c_import_desc: "Återställ eller ladda en layoutmall från en fil.",
+                sec3_title: "3. Hantera kort och mätvärden",
+                sec3_desc: "Längst ner i inställningspanelen hittar du en lista över aktuella kort som du kan ändra på följande sätt:",
+                sec3_order: "Kortordning:",
+                sec3_order_desc: "Flytta kort upp eller ner med styrknapparna.",
+                sec3_dim: "Kortmått:",
+                sec3_dim_desc: "Använd reglagen för att justera kortets bredd (colSpan 1-12), höjd och antal sensorkolumner.",
+                sec3_charts: "Diagram:",
+                sec3_charts_desc: "Lägg till levande linjediagram på korten för spårning i realtid. Välj önskat mätvärde, färg, decimaler och enhetskonvertering (t.ex. MHz till GHz eller °C till °F).",
+                sec3_alerts: "Textsensorer & Varningar:",
+                sec3_alerts_desc: "Lägg till enskilda textbaserade mätvärden på ett kort. Du kan ställa in en tröskel för varningsvärde; om den överskrids blir värdet rött och kortet aktiverar en varningsram (alert-active).",
+                sec4_title: "4. Språkval",
+                sec4_desc: "Du kan ändra gränssnittsspråk direkt från rullgardinsmenyn i det övre fältet. Följande språk stöds:",
+                footer: "HardwareMonitor Dashboard • Användarguide & Dokumentation"
+            },
+            de: {
+                meta_title: "HardwareMonitor Dashboard – Benutzerhandbuch",
+                title: "HardwareMonitor <span>Dashboard</span>",
+                subtitle: "Benutzerhandbuch – Umfassende Dokumentation zur Echtzeit-Überwachung Ihrer Computer-Hardware-Metriken.",
+                sec1_title: "1. Systemanforderungen & Einrichtung",
+                sec1_desc: "Um Metriken an das Dashboard zu streamen, müssen Sie eine oder beide der folgenden Softwares im Hintergrund mit aktiviertem Webserver ausführen:",
+                sec1_hwinfo: "HWiNFO:",
+                sec1_hwinfo_desc: "Laden Sie <a href=\"https://www.hwinfo.com/download/\" target=\"_blank\">HWiNFO hier herunter</a> und aktivieren Sie den <a href=\"https://github.com/Demion/remotehwinfo\" target=\"_blank\">RemoteHWInfo</a>-Server.",
+                sec1_lhm: "Libre Hardware Monitor (LHM):",
+                sec1_lhm_desc: "Laden Sie <a href=\"https://github.com/LibreHardwareMonitor/LibreHardwareMonitor\" target=\"_blank\">Libre Hardware Monitor hier herunter</a> (erfordert den in den Einstellungen aktivierten Remote-Webserver).",
+                sec2_title: "2. Einstellungen öffnen und verwalten",
+                sec2_desc: "Klicken Sie auf die Schaltfläche Einstellungen in der oberen rechten Ecke, um Layout, Karten und Metriken anzupassen.",
+                sec2a_title: "A. Theme-Anpassung & Vorlagen",
+                sec2a_desc: "Wählen Sie ein integriertes Theme oder passen Sie alle Farben manuell über die Farbauswahl an:",
+                sec2a_presets: "Vingeführte Themes:",
+                sec2a_presets_list: "Midnight Obsidian, Cyberpunk Neon, Nordic Frost, Clean Light, Retro Console, Matrix Grid.",
+                sec2a_colors: "Farbfelder:",
+                sec2a_colors_desc: "Hintergrund (--bg), Kartenhintergrund (--card), Diagramm-Container (--card-sub), Akzentfarben (--accent) sowie Text- und Rahmenfarben.",
+                sec2b_title: "B. Verbindungseinstellungen & Auflösung",
+                sec2b_firewall: "Führen Sie das mitgelieferte Firewall-Skript aus, wenn Sie das Dashboard auf einem anderen Gerät im selben Netzwerk (z. B. Tablet) ausführen.",
+                sec2b_ip: "HWiNFO/LHM IP:Port:",
+                sec2b_ip_desc: "Definieren Sie die IP-Adressen und Ports für Ihre Hardwarequellen (z. B. HWiNFO 127.0.0.1:60000 und LHM 127.0.0.1:8085).",
+                sec2b_polling: "Abfrageintervall (ms):",
+                sec2b_polling_desc: "Legen Sie fest, wie oft Daten in Millisekunden aktualisiert werden (z. B. 4000 = 4 Sekunden). Klicken Sie auf Speichern & Testen, wenn Sie fertig sind.",
+                sec2b_res: "Auflösungseinstellungen:",
+                sec2b_res_desc: "Wählen Sie eine voreingestellte Auflösungsbasis oder geben Sie eine benutzerdefinierte Breite und Höhe ein, um das Dashboard perfekt für ein Sensor-Display zu skalieren.",
+                sec2c_title: "C. Einstellungen exportieren und importieren",
+                sec2c_export: "Einstellungen exportieren (JSON):",
+                sec2c_export_desc: "Sichern Sie Ihr aktuelles Layout, Ihre Karten und Ihr Theme in einer Datei.",
+                sec2c_import: "Einstellungen importieren (JSON):",
+                sec2c_import_desc: "Stellen Sie eine Layout-Vorlage aus einer Datei wieder her oder laden Sie sie.",
+                sec3_title: "3. Karten und Metriken verwalten",
+                sec3_desc: "Am unteren Rand des Einstellungsbereichs finden Sie eine Liste der aktuellen Karten, die Sie wie folgt ändern können:",
+                sec3_order: "Kartenreihenfolge:",
+                sec3_order_desc: "Verschieben Sie Karten mit den Steuertasten nach oben oder unten.",
+                sec3_dim: "Kartenabmessungen:",
+                sec3_dim_desc: "Verwenden Sie Schieberegler, um die Kartenbreite (colSpan 1-12), die Höhe und die Anzahl der Sensorspalten anzupassen.",
+                sec3_charts: "Diagramme:",
+                sec3_charts_desc: "Fügen Sie Live-Liniendiagramme zu Karten für die Echtzeitverfolgung hinzu. Wählen Sie die gewünschte Metrik, Farbe, Dezimalstellen und Einheitenumrechnung (z. B. MHz in GHz oder °C in °F).",
+                sec3_alerts: "Textsensoren & Alarme:",
+                sec3_alerts_desc: "Fügen Sie einzelne textbasierte Metriken zu einer Karte hinzu. Sie können einen Schwellenwert für Alarme festlegen; bei Überschreitung wird der Wert rot und die entsprechende Karte aktiviert einen Alarmrahmen (alert-active).",
+                sec4_title: "4. Sprachauswahl",
+                sec4_desc: "Sie können die Sprache der Benutzeroberfläche direkt über das Dropdown-Menü in der oberen Leiste ändern. Unterstützte Sprachen:",
+                footer: "HardwareMonitor Dashboard • Benutzerhandbuch & Dokumentation"
+            }
+        };
+
+        function changeLanguage(lang) {
+            localStorage.setItem('readme_lang', lang);
+            const t = translations[lang];
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    el.innerHTML = t[key];
+                }
+            });
+
+            if (t.meta_title) {
+                document.title = t.meta_title;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('readme_lang') || 'en';
+            const selectEl = document.getElementById('langSelect');
+            if (selectEl) {
+                selectEl.value = savedLang;
+            }
+            changeLanguage(savedLang);
+        });
+    </script>
+
+</body>
+</html>
