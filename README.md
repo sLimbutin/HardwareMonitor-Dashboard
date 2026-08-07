@@ -7,7 +7,7 @@ Lightweight hardware monitoring for your computer hardware in real time.
 To stream metrics into the dashboard, you must have one or both of the following software running in the background with a web server enabled:
 
 -   **HWiNFO:** Download HWiNFO [here](https://www.hwinfo.com/download/) and requires the [RemoteHWInfo](https://github.com/Demion/remotehwinfo) server enabled.
--   **Libre Hardware Monitor (LHM) or OpenHardwareMonitor (OHM):** Download Libre Hardware Monitor [here](https://github.scom/LibreHardwareMonitor/LibreHardwareMonitor) or OpenHardwareMonitor [here]( (requires the built-in Remote Web Server enabled in the settings).
+-   **Libre Hardware Monitor (LHM) or OpenHardwareMonitor (OHM):** Download Libre Hardware Monitor [here](https://github.scom/LibreHardwareMonitor/LibreHardwareMonitor) or OpenHardwareMonitor [here](https://github.com/HardwareMonitor/openhardwaremonitor) (requires the built-in Remote Web Server enabled in the settings).
 
 ## 2. Opening and Managing Settings
 
