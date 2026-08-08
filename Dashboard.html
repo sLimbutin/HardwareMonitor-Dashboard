@@ -1184,7 +1184,7 @@
         </div>
 
         <div class="settings-card-box" style="border: 1px solid var(--border);">
-            <h3 style="color: var(--accent); margin-bottom: 16px; font-size: 1rem; font-weight: 700;">🌍 Language & Settings Font Size</h3>
+            <h3 style="color: var(--accent); margin-bottom: 16px; font-size: 1rem; font-weight: 700;" data-i18n="lang_settings_title">🌍 Language & Settings Font Size</h3>
             <div class="input-group" style="margin-bottom: 16px;">
                 <strong style="color: var(--text); min-width: 140px; font-size: 0.9rem;" data-i18n="label_lang_select">Language:</strong>
                 <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)" style="width: 260px; min-width: 200px;">
@@ -1195,13 +1195,13 @@
                 </select>
             </div>
             <div class="input-group">
-                <strong style="color: var(--text); min-width: 140px; font-size: 0.9rem;">Settings Font Size:</strong>
+                <strong style="color: var(--text); min-width: 140px; font-size: 0.9rem;" data-i18n="lbl_settings_font_size">Settings Font Size:</strong>
                 <div class="slider-control-group" style="flex: 1; max-width: 400px;">
                     <input type="range" min="70" max="130" step="5" value="100" id="settings-font-size-slider"
                         oninput="updateSettingsFontSize(parseInt(this.value))">
                     <span class="slider-val-display" id="settings-font-size-val">100%</span>
                 </div>
-                <button class="btn-small" onclick="updateSettingsFontSize(100); document.getElementById('settings-font-size-slider').value=100; document.getElementById('settings-font-size-val').innerText='100%';">Reset</button>
+                <button class="btn-small" data-i18n="btn_reset_small" onclick="updateSettingsFontSize(100); document.getElementById('settings-font-size-slider').value=100; document.getElementById('settings-font-size-val').innerText='100%';">Reset</button>
             </div>
         </div>
 
@@ -1339,7 +1339,23 @@
                 lbl_dec_suffix_short: " Dec",
                 lbl_alert_placeholder: "Alert > value",
                 drag_label: "⠿ Drag",
-                paint_all_charts: "🎨 Paint All Charts:"
+                paint_all_charts: "🎨 Paint All Charts:",
+                lbl_refresh: "⏱ Refresh:",
+                refresh_global: "Global default",
+                preview_label: "Preview (mock data)",
+                lang_settings_title: "🌍 Language & Settings Font Size",
+                lbl_settings_font_size: "Settings Font Size:",
+                btn_reset_small: "Reset",
+                dyn_color_label: "🎨 Dynamic Color by Value",
+                sensor_dyn_color_label: "🎨 Dynamic value color",
+                lbl_base_color_low: "Base color (low):",
+                lbl_base: "Base:",
+                lbl_color_source_sensor: "Color Source Sensor (optional):",
+                lbl_thresholds: "Thresholds (value ≥ X → color):",
+                lbl_ge_value: "≥ Value:",
+                lbl_color: "Color:",
+                btn_add_threshold: "+ Add Threshold",
+                btn_add_short: "+ Add"
             },
             fi: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1385,7 +1401,7 @@
                 btn_reset: "Palauta Oletukset",
                 label_width: "Leveys:",
                 label_height: "Korkeus:",
-                label_sensor_cols: "Antarisarakkeet:",
+                label_sensor_cols: "Anturisarakkeet:",
                 btn_up: "▲ Ylös",
                 btn_down: "▼ Alas",
                 expand: "► Laajenna",
@@ -1407,11 +1423,27 @@
                 lbl_select_sensor: "-- Valitse anturi --",
                 lbl_select_chart_sensor: "-- Valitse kaavion anturi --",
                 lbl_font_prefix: "Fontti: ",
-                lbl_dec_suffix: " des=",
+                lbl_dec_suffix: " desimaalia",
                 lbl_dec_suffix_short: " des",
                 lbl_alert_placeholder: "Hälytys > arvo",
                 drag_label: "⠿ Raahaa",
-                paint_all_charts: "🎨 Värjää kaikki graafit:"
+                paint_all_charts: "🎨 Värjää kaikki graafit:",
+                lbl_refresh: "⏱ Päivitys:",
+                refresh_global: "Yleinen oletus",
+                preview_label: "Esikatselu (testidata)",
+                lang_settings_title: "🌍 Kieli & Asetuspaneelin Fonttikoko",
+                lbl_settings_font_size: "Asetuspaneelin Fonttikoko:",
+                btn_reset_small: "Palauta",
+                dyn_color_label: "🎨 Dynaaminen väri arvon mukaan",
+                sensor_dyn_color_label: "🎨 Dynaaminen arvoväri",
+                lbl_base_color_low: "Peruväri (matala):",
+                lbl_base: "Perus:",
+                lbl_color_source_sensor: "Värin lähdeanturi (valinnainen):",
+                lbl_thresholds: "Kynnysarvot (arvo ≥ X → väri):",
+                lbl_ge_value: "≥ Arvo:",
+                lbl_color: "Väri:",
+                btn_add_threshold: "+ Lisää kynnysarvo",
+                btn_add_short: "+ Lisää"
             },
             sv: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1483,7 +1515,23 @@
                 lbl_dec_suffix_short: " dec",
                 lbl_alert_placeholder: "Larm > värde",
                 drag_label: "⠿ Dra",
-                paint_all_charts: "🎨 Färga alla diagram:"
+                paint_all_charts: "🎨 Färga alla diagram:",
+                lbl_refresh: "⏱ Uppdatering:",
+                refresh_global: "Global standard",
+                preview_label: "Förhandsvisning (testdata)",
+                lang_settings_title: "🌍 Språk & Teckenstorlek för Inställningar",
+                lbl_settings_font_size: "Teckenstorlek för Inställningar:",
+                btn_reset_small: "Återställ",
+                dyn_color_label: "🎨 Dynamisk färg efter värde",
+                sensor_dyn_color_label: "🎨 Dynamisk värdefärg",
+                lbl_base_color_low: "Basfärg (låg):",
+                lbl_base: "Bas:",
+                lbl_color_source_sensor: "Färgkällsensor (valfritt):",
+                lbl_thresholds: "Tröskelvärden (värde ≥ X → färg):",
+                lbl_ge_value: "≥ Värde:",
+                lbl_color: "Färg:",
+                btn_add_threshold: "+ Lägg till tröskelvärde",
+                btn_add_short: "+ Lägg till"
             },
             de: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1555,7 +1603,23 @@
                 lbl_dec_suffix_short: " Dez",
                 lbl_alert_placeholder: "Alarm > Wert",
                 drag_label: "⠿ Ziehen",
-                paint_all_charts: "🎨 Alle Diagramme färben:"
+                paint_all_charts: "🎨 Alle Diagramme färben:",
+                lbl_refresh: "⏱ Aktualisierung:",
+                refresh_global: "Globaler Standard",
+                preview_label: "Vorschau (Testdaten)",
+                lang_settings_title: "🌍 Sprache & Schriftgröße der Einstellungen",
+                lbl_settings_font_size: "Schriftgröße der Einstellungen:",
+                btn_reset_small: "Zurücksetzen",
+                dyn_color_label: "🎨 Dynamische Farbe nach Wert",
+                sensor_dyn_color_label: "🎨 Dynamische Wertfarbe",
+                lbl_base_color_low: "Basisfarbe (niedrig):",
+                lbl_base: "Basis:",
+                lbl_color_source_sensor: "Farbquellensensor (optional):",
+                lbl_thresholds: "Schwellenwerte (Wert ≥ X → Farbe):",
+                lbl_ge_value: "≥ Wert:",
+                lbl_color: "Farbe:",
+                btn_add_threshold: "+ Schwellenwert hinzufügen",
+                btn_add_short: "+ Hinzufügen"
             }
         };
 
@@ -1809,14 +1873,21 @@
             return dc.baseColor || chart.color || '#38bdf8';
         }
 
+        let lastAppliedChartColor = {};
         function applyChartColor(chartId, color) {
             const instance = chartInstances[chartId];
             if (!instance) return;
-            instance.data.datasets[0].borderColor = color;
-            instance.data.datasets[0].backgroundColor = hexToRgba(color, 0.08);
+            // Skip the redraw + gradient recompute entirely when the color hasn't actually
+            // changed since last poll — this is the common case (static or slowly-changing color)
+            // and previously caused an unnecessary canvas redraw on every single poll cycle.
+            if (lastAppliedChartColor[chartId] !== color) {
+                instance.data.datasets[0].borderColor = color;
+                instance.data.datasets[0].backgroundColor = hexToRgba(color, 0.08);
+                const valEl = document.getElementById(`chart-val-${chartId}`);
+                if (valEl) valEl.style.color = color;
+                lastAppliedChartColor[chartId] = color;
+            }
             instance.update('none');
-            const valEl = document.getElementById(`chart-val-${chartId}`);
-            if (valEl) valEl.style.color = color;
         }
 
         let hwinfoIp = localStorage.getItem('hwinfo_ip_address') || '127.0.0.1:60000';
@@ -1824,6 +1895,23 @@
 
         let persistentSensorMap = JSON.parse(localStorage.getItem('remotehwinfo_persistent_sensors') || '{}');
         let sessionMinMax = JSON.parse(localStorage.getItem('remotehwinfo_session_minmax') || '{}');
+        // Tracks which sensor IDs the source actually reported in the most recent poll,
+        // used by performMemoryHousekeeping() to prune stale/orphaned entries (e.g. from
+        // transient per-process sensors) out of persistentSensorMap over time.
+        let lastPolledSensorIds = new Set();
+
+        // Perf: disable Chart.js animations globally (values already stream in via update('none'))
+        // and batch resize-driven redraws instead of firing on every intermediate layout tick.
+        if (window.Chart) {
+            Chart.defaults.animation = false;
+            Chart.defaults.resizeDelay = 150;
+            // Canvas redraw cost scales with pixel area, which scales with devicePixelRatio².
+            // Capping it avoids doing 4x (or more, on some laptop panels) the pixel work per
+            // redraw on high-DPI displays for a marginal, barely-noticeable sharpness gain
+            // on small sparkline-style charts like these.
+            Chart.defaults.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+        }
+
         let chartInstances = {};
         let chartHistories = {};
         let collapsedCards = {};
@@ -1848,6 +1936,61 @@
             if (refreshTimer) clearInterval(refreshTimer);
             refreshTimer = setInterval(updateValues, refreshMs);
         }
+
+        // Periodically release memory that accumulates during a long-running session:
+        // - chartHistories / sparklineHistories / lastAppliedChartColor keep an entry per
+        //   chart/sensor ID forever, even after that chart/sensor is deleted from a card.
+        // - persistentSensorMap keeps every sensor label HWiNFO/LHM has ever reported; if the
+        //   source exposes transient entries (e.g. per-process readings), this can grow
+        //   unbounded over hours of uptime since old labels are never dropped automatically.
+        // This prunes anything that's both unused in the current config AND wasn't seen in the
+        // most recent poll, so actively-configured sensors are never touched.
+        let housekeepingRuns = 0;
+        function performMemoryHousekeeping() {
+            const liveChartSensorIds = new Set();
+            const referencedSourceSensorIds = new Set();
+            config.forEach(card => {
+                (card.charts || []).forEach(ch => {
+                    liveChartSensorIds.add(ch.id);
+                    if (ch.sensorId) referencedSourceSensorIds.add(ch.sensorId);
+                    if (ch.dynamicColor && ch.dynamicColor.colorSensorId) referencedSourceSensorIds.add(ch.dynamicColor.colorSensorId);
+                });
+                (card.sensors || []).forEach(s => {
+                    liveChartSensorIds.add(s.id);
+                    if (s.sensorId) referencedSourceSensorIds.add(s.sensorId);
+                });
+            });
+
+            let prunedLocal = 0;
+            [chartHistories, sparklineHistories, lastAppliedChartColor].forEach(map => {
+                Object.keys(map).forEach(id => {
+                    if (!liveChartSensorIds.has(id)) { delete map[id]; prunedLocal++; }
+                });
+            });
+
+            // Only prune the discovered-sensor cache once we've actually completed at least
+            // one poll (lastPolledSensorIds populated), otherwise everything would look "unseen".
+            let prunedSensors = 0;
+            if (lastPolledSensorIds.size > 0) {
+                Object.keys(persistentSensorMap).forEach(id => {
+                    if (!referencedSourceSensorIds.has(id) && !lastPolledSensorIds.has(id)) {
+                        delete persistentSensorMap[id];
+                        prunedSensors++;
+                    }
+                });
+                if (prunedSensors > 0) {
+                    localStorage.setItem('remotehwinfo_persistent_sensors', JSON.stringify(persistentSensorMap));
+                }
+            }
+
+            if ((prunedLocal > 0 || prunedSensors > 0)) {
+                console.debug(`[housekeeping] pruned ${prunedLocal} stale chart/sensor cache entries, ${prunedSensors} stale discovered sensors`);
+            }
+            housekeepingRuns++;
+        }
+        // Sweep every 3 minutes — cheap (just Set lookups over small objects) and independent
+        // of the polling rate, so it keeps working even if a card overrides its own refresh rate.
+        setInterval(performMemoryHousekeeping, 3 * 60 * 1000);
 
         function clearSensorCache() {
             persistentSensorMap = {};
@@ -2124,26 +2267,22 @@
 
         function parseRemoteHwInfoJson(data) {
             if (data && data.hwinfo && Array.isArray(data.hwinfo.readings) && Array.isArray(data.hwinfo.sensors)) {
-                let sensorIndex = -1;
-                let currentSensorName = "HWiNFO";
+                // Build an O(1) lookup of entryIndex -> sensor name once per poll,
+                // instead of scanning the sensors array for every reading (was O(n*m)).
+                const sensorNameByIndex = new Map();
+                for (let j = 0; j < data.hwinfo.sensors.length; ++j) {
+                    const s = data.hwinfo.sensors[j];
+                    sensorNameByIndex.set(parseInt(s.entryIndex), s.sensorNameUser || s.sensorName || "HWiNFO");
+                }
 
                 for (let i = 0; i < data.hwinfo.readings.length; ++i) {
                     const reading = data.hwinfo.readings[i];
                     const parsedSensorIndex = parseInt(reading.sensorIndex);
-
-                    if (sensorIndex !== parsedSensorIndex) {
-                        sensorIndex = parsedSensorIndex;
-                        for (let j = 0; j < data.hwinfo.sensors.length; ++j) {
-                            if ((parseInt(data.hwinfo.sensors[j].entryIndex)) === sensorIndex) {
-                                currentSensorName = data.hwinfo.sensors[j].sensorNameUser || data.hwinfo.sensors[j].sensorName || "HWiNFO";
-                                break;
-                            }
-                        }
-                    }
+                    const currentSensorName = sensorNameByIndex.get(parsedSensorIndex) || "HWiNFO";
 
                     const label = reading.labelUser || reading.label || "Sensor";
                     const uniqueId = `remotehw_${currentSensorName}_${label}`.replace(/\s+/g, '_');
-                    
+
                     persistentSensorMap[uniqueId] = {
                         id: uniqueId,
                         source: 'hwinfo',
@@ -2154,6 +2293,11 @@
                         rawVal: reading.value,
                         rawUnit: reading.unit || ''
                     };
+                    lastPolledSensorIds.add(uniqueId);
+
+                    // Populate the fast lookup map used by getHwValue() in the same pass —
+                    // avoids a second full traversal of the readings array (buildHwValueMap used to redo this work).
+                    hwValueMap[uniqueId] = { value: reading.value, unit: reading.unit || '' };
                 }
             }
             // localStorage write moved to caller
@@ -2199,6 +2343,7 @@
                     rawVal: parsedVal,
                     rawUnit: unit
                 };
+                lastPolledSensorIds.add(uniqueId);
             }
 
             if (hasChildren) {
@@ -2311,13 +2456,16 @@
             if (convertType === 'c_to_f') return (num * 9/5) + 32;
             if (convertType === 'f_to_c') return (num - 32) * 5/9;
             if (convertType === 'auto_speed' || uLower.includes('/s')) {
-                let mbs = num;
-                if (uLower.includes('kb/s')) {
-                    if (num >= 1024) mbs = num / 1024;
-                } else if (uLower.includes('gb/s')) {
-                    mbs = num * 1024;
-                }
-                return mbs;
+                // IMPORTANT: always normalize to a single fixed unit (MB/s) here, regardless of
+                // magnitude. This value feeds the chart's history array — if it flip-flopped
+                // between KB/s-scale and MB/s-scale numbers (like the display text does), the
+                // chart line would jump/collapse whenever a reading crossed the 1024 threshold,
+                // even though the real throughput changed smoothly. The auto-scaled unit label
+                // in formatSensorValue() is purely cosmetic and can keep switching independently.
+                if (uLower.includes('kb/s')) return num / 1024;
+                if (uLower.includes('gb/s')) return num * 1024;
+                if (uLower.includes('mb/s')) return num;
+                return num; // unit unknown — keep raw value, but it stays consistent between polls
             }
             if (convertType === 'bytes_to_mb') return num / (1024 * 1024);
             if (convertType === 'bytes_to_gb' || convertType === 'mb_to_gb') {
@@ -2603,6 +2751,8 @@
         }
 
         function buildDynamicColorUI(cIndex, chIndex, ch) {
+            const lang = localStorage.getItem('dashboard_lang') || 'en';
+            const t = translations[lang] || translations.en;
             const dc = ch.dynamicColor || { enabled: false, baseColor: ch.color || '#38bdf8', thresholds: [{ value: 60, color: '#f59e0b' }, { value: 80, color: '#f43f5e' }] };
             const enabled = dc.enabled || false;
             const thresholds = dc.thresholds || [];
@@ -2621,10 +2771,10 @@
 
             let thresholdRows = thresholds.map((thr, tIdx) => `
                 <div style="display:flex; gap:8px; align-items:center; margin-top:6px;">
-                    <span style="font-size:0.78rem; color:var(--muted); min-width:60px;">≥ Value:</span>
+                    <span style="font-size:0.78rem; color:var(--muted); min-width:60px;">${t.lbl_ge_value || '≥ Value:'}</span>
                     <input type="number" value="${thr.value}" style="width:80px; flex:0 0 80px;"
                         onchange="updateDynamicThreshold(${cIndex}, ${chIndex}, ${tIdx}, 'value', parseFloat(this.value))">
-                    <span style="font-size:0.78rem; color:var(--muted);">Color:</span>
+                    <span style="font-size:0.78rem; color:var(--muted);">${t.lbl_color || 'Color:'}</span>
                     <input type="color" value="${thr.color}"
                         onchange="updateDynamicThreshold(${cIndex}, ${chIndex}, ${tIdx}, 'color', this.value)"
                         style="width:38px; height:32px; flex-shrink:0;">
@@ -2638,10 +2788,10 @@
                         <label style="display:flex; align-items:center; gap:7px; cursor:pointer; font-size:0.85rem; font-weight:700; color:var(--text);">
                             <input type="checkbox" ${enabled ? 'checked' : ''} onchange="updateDynamicColorEnabled(${cIndex}, ${chIndex}, this.checked)"
                                 style="accent-color:var(--accent); width:15px; height:15px;">
-                            🎨 Dynamic Color by Value
+                            ${t.dyn_color_label || '🎨 Dynamic Color by Value'}
                         </label>
                         ${enabled ? `
-                        <span style="font-size:0.78rem; color:var(--muted);">Base color (low):</span>
+                        <span style="font-size:0.78rem; color:var(--muted);">${t.lbl_base_color_low || 'Base color (low):'}</span>
                         <input type="color" value="${baseColor}"
                             onchange="updateDynamicColorBase(${cIndex}, ${chIndex}, this.value)"
                             style="width:38px; height:32px; flex-shrink:0;">
@@ -2649,7 +2799,7 @@
                     </div>
                     ${enabled ? `
                     <div style="margin-top:8px; padding:10px; background:rgba(0,0,0,0.15); border-radius:8px; border:1px dashed var(--border);">
-                        <div style="font-size:0.75rem; color:var(--muted); font-weight:700; text-transform:uppercase; margin-bottom:6px;">Color Source Sensor (optional):</div>
+                        <div style="font-size:0.75rem; color:var(--muted); font-weight:700; text-transform:uppercase; margin-bottom:6px;">${t.lbl_color_source_sensor || 'Color Source Sensor (optional):'}</div>
                         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                             <div class="radio-group" style="flex-shrink:0;">
                                 <label><input type="radio" name="dc_src_${cIndex}_${chIndex}" value="hwinfo" ${colorSensorSource === 'hwinfo' ? 'checked' : ''} onchange="updateDynamicColorSensorSource(${cIndex}, ${chIndex}, 'hwinfo')"> HWiNFO</label>
@@ -2657,9 +2807,9 @@
                             </div>
                             ${buildSensorSelect(colorSensorSource === 'hwinfo' ? hwSensors : lhmSensors, colorSensorId, `updateDynamicColorSensor(${cIndex}, ${chIndex}, this.value)`)}
                         </div>
-                        <div style="font-size:0.75rem; color:var(--muted); font-weight:700; text-transform:uppercase; margin-top:10px; margin-bottom:4px;">Thresholds (value ≥ X → color):</div>
+                        <div style="font-size:0.75rem; color:var(--muted); font-weight:700; text-transform:uppercase; margin-top:10px; margin-bottom:4px;">${t.lbl_thresholds || 'Thresholds (value ≥ X → color):'}</div>
                         ${thresholdRows}
-                        <button class="btn-small" onclick="addDynamicThreshold(${cIndex}, ${chIndex})" style="margin-top:8px;">+ Add Threshold</button>
+                        <button class="btn-small" onclick="addDynamicThreshold(${cIndex}, ${chIndex})" style="margin-top:8px;">${t.btn_add_threshold || '+ Add Threshold'}</button>
                     </div>
                     ` : ''}
                 </div>
@@ -2685,6 +2835,7 @@
             if (!config[cIndex].charts[chIndex].dynamicColor) return;
             config[cIndex].charts[chIndex].dynamicColor.baseColor = color;
             saveConfig();
+            scheduleCardPreviewRefresh();
         }
 
         function updateDynamicColorSensor(cIndex, chIndex, sensorId) {
@@ -2695,6 +2846,7 @@
             const sensor = persistentSensorMap[sensorId];
             dc.colorSensorConvert = sensor ? 'none' : 'none';
             saveConfig();
+            scheduleCardPreviewRefresh();
         }
 
         function updateDynamicColorSensorSource(cIndex, chIndex, source) {
@@ -2711,6 +2863,7 @@
             if (!dc || !dc.thresholds) return;
             dc.thresholds[tIdx][prop] = val;
             saveConfig();
+            scheduleCardPreviewRefresh();
         }
 
         function addDynamicThreshold(cIndex, chIndex) {
@@ -2731,13 +2884,15 @@
         }
 
         function buildSensorColorUI(cIndex, sIndex, s) {
+            const lang = localStorage.getItem('dashboard_lang') || 'en';
+            const t = translations[lang] || translations.en;
             const sc = s.sensorColor || { enabled: false, baseColor: '', thresholds: [] };
             if (!sc.enabled) {
                 return `<div style="padding: 4px 0 2px 0;">
                     <label style="display:flex; align-items:center; gap:7px; cursor:pointer; font-size:0.8rem; color:var(--muted);">
                         <input type="checkbox" onchange="updateSensorColorEnabled(${cIndex}, ${sIndex}, this.checked)"
                             style="accent-color:var(--accent); width:13px; height:13px;">
-                        🎨 Dynamic value color
+                        ${t.sensor_dyn_color_label || '🎨 Dynamic value color'}
                     </label>
                 </div>`;
             }
@@ -2745,10 +2900,10 @@
             const thresholds = sc.thresholds || [];
             const rows = thresholds.map((thr, tIdx) => `
                 <div style="display:flex; gap:8px; align-items:center; margin-top:5px;">
-                    <span style="font-size:0.78rem; color:var(--muted); min-width:55px;">≥ Value:</span>
+                    <span style="font-size:0.78rem; color:var(--muted); min-width:55px;">${t.lbl_ge_value || '≥ Value:'}</span>
                     <input type="number" value="${thr.value}" style="width:75px;"
                         onchange="updateSensorColorThreshold(${cIndex}, ${sIndex}, ${tIdx}, 'value', parseFloat(this.value))">
-                    <span style="font-size:0.78rem; color:var(--muted);">Color:</span>
+                    <span style="font-size:0.78rem; color:var(--muted);">${t.lbl_color || 'Color:'}</span>
                     <input type="color" value="${thr.color}"
                         onchange="updateSensorColorThreshold(${cIndex}, ${sIndex}, ${tIdx}, 'color', this.value)"
                         style="width:36px; height:30px;">
@@ -2760,14 +2915,14 @@
                         <label style="display:flex; align-items:center; gap:7px; cursor:pointer; font-size:0.82rem; font-weight:700; color:var(--text);">
                             <input type="checkbox" checked onchange="updateSensorColorEnabled(${cIndex}, ${sIndex}, this.checked)"
                                 style="accent-color:var(--accent); width:13px; height:13px;">
-                            🎨 Dynamic value color
+                            ${t.sensor_dyn_color_label || '🎨 Dynamic value color'}
                         </label>
-                        <span style="font-size:0.78rem; color:var(--muted);">Base:</span>
+                        <span style="font-size:0.78rem; color:var(--muted);">${t.lbl_base || 'Base:'}</span>
                         <input type="color" value="${baseColor}" onchange="updateSensorColorBase(${cIndex}, ${sIndex}, this.value)" style="width:36px; height:30px;">
                     </div>
-                    <div style="font-size:0.73rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-top:8px; margin-bottom:2px;">Thresholds (value ≥ X → color):</div>
+                    <div style="font-size:0.73rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-top:8px; margin-bottom:2px;">${t.lbl_thresholds || 'Thresholds (value ≥ X → color):'}</div>
                     ${rows}
-                    <button class="btn-small" onclick="addSensorColorThreshold(${cIndex}, ${sIndex})" style="margin-top:7px;">+ Add</button>
+                    <button class="btn-small" onclick="addSensorColorThreshold(${cIndex}, ${sIndex})" style="margin-top:7px;">${t.btn_add_short || '+ Add'}</button>
                 </div>`;
         }
 
@@ -2789,12 +2944,14 @@
             if (config[cIndex].sensors[sIndex].sensorColor)
                 config[cIndex].sensors[sIndex].sensorColor.baseColor = color;
             saveConfig();
+            scheduleCardPreviewRefresh();
         }
 
         function updateSensorColorThreshold(cIndex, sIndex, tIdx, prop, val) {
             const sc = config[cIndex].sensors[sIndex].sensorColor;
             if (sc && sc.thresholds) sc.thresholds[tIdx][prop] = val;
             saveConfig();
+            scheduleCardPreviewRefresh();
         }
 
         function addSensorColorThreshold(cIndex, sIndex) {
@@ -2992,9 +3149,9 @@
                                     </select>
                                 </div>
                                 <div class="meta-field">
-                                    <label>⏱ Refresh:</label>
+                                    <label>${t.lbl_refresh || '⏱ Refresh:'}</label>
                                     <select onchange="updateCardProperty(${cIndex}, 'refreshMs', this.value ? parseInt(this.value) : null)">
-                                        <option value="" ${!card.refreshMs ? 'selected' : ''}>Global default</option>
+                                        <option value="" ${!card.refreshMs ? 'selected' : ''}>${t.refresh_global || 'Global default'}</option>
                                         <option value="1000" ${card.refreshMs === 1000 ? 'selected' : ''}>1 s</option>
                                         <option value="2000" ${card.refreshMs === 2000 ? 'selected' : ''}>2 s</option>
                                         <option value="5000" ${card.refreshMs === 5000 ? 'selected' : ''}>5 s</option>
@@ -3207,7 +3364,7 @@
                         </div>
                         <div class="card-preview-col">
                         <div class="card-preview-panel">
-                            <div class="card-preview-panel-label"><span class="live-dot"></span>Preview (mock data)</div>
+                            <div class="card-preview-panel-label"><span class="live-dot"></span>${t.preview_label || 'Preview (mock data)'}</div>
                             <div class="card-preview-wrap" id="preview-wrap-${cIndex}"></div>
                         </div>
                         </div>
@@ -3396,9 +3553,20 @@
             });
         }
 
+        let previewRefreshDebounceTimer = null;
+        function scheduleCardPreviewRefresh() {
+            // Debounced so that rapid-fire events (dragging a width/height slider fires
+            // oninput dozens of times per second) don't tear down and rebuild every
+            // preview's Chart.js instances on every tick — just once, shortly after
+            // the user stops interacting.
+            clearTimeout(previewRefreshDebounceTimer);
+            previewRefreshDebounceTimer = setTimeout(() => initCardPreviews(), 200);
+        }
+
         function updateCardProperty(cIndex, prop, val) {
             config[cIndex][prop] = val;
             saveConfig();
+            scheduleCardPreviewRefresh(); // keep the live preview panel in sync with every settings change
         }
 
         function addNewCard() {
@@ -3413,6 +3581,7 @@
                 config.splice(cIndex, 1);
                 saveConfig();
                 renderSettingsDOM(false);
+                performMemoryHousekeeping();
             }
         }
 
@@ -3428,6 +3597,7 @@
             config[cIndex].charts.splice(chIndex, 1);
             saveConfig();
             renderSettingsDOM(false);
+            performMemoryHousekeeping();
         }
 
         function updateChart(cIndex, chIndex, prop, val) {
@@ -3436,6 +3606,7 @@
             if (prop === 'title' || prop === 'fontSize' || prop === 'color' || prop === 'fill' || prop === 'lineWidth') {
                 renderDashboardDOM();
             }
+            scheduleCardPreviewRefresh(); // keep the live preview panel in sync with every settings change
         }
 
         function updateChartSource(cIndex, chIndex, source) {
@@ -3457,6 +3628,7 @@
             config[cIndex].sensors.splice(sIndex, 1);
             saveConfig();
             renderSettingsDOM(false);
+            performMemoryHousekeeping();
         }
 
         function updateSensor(cIndex, sIndex, prop, val) {
@@ -3465,6 +3637,7 @@
             if (prop === 'label' || prop === 'fontSize' || prop === 'chartId') {
                 renderDashboardDOM();
             }
+            scheduleCardPreviewRefresh(); // keep the live preview panel in sync with every settings change
         }
 
         function updateSensorSource(cIndex, sIndex, source) {
@@ -3494,29 +3667,9 @@
         let lhmValueMap = {};
 
         function buildHwValueMap(data) {
+            // Populated together with persistentSensorMap inside parseRemoteHwInfoJson()
+            // in a single pass now — this just resets the map before that runs.
             hwValueMap = {};
-            if (!data || !data.hwinfo || !Array.isArray(data.hwinfo.readings) || !Array.isArray(data.hwinfo.sensors)) return;
-            let sensorIndex = -1;
-            let currentSensorName = "HWiNFO";
-            for (let r of data.hwinfo.readings) {
-                const parsedSensorIndex = parseInt(r.sensorIndex);
-                if (sensorIndex !== parsedSensorIndex) {
-                    sensorIndex = parsedSensorIndex;
-                    for (let j = 0; j < data.hwinfo.sensors.length; ++j) {
-                        if ((parseInt(data.hwinfo.sensors[j].entryIndex)) === sensorIndex) {
-                            currentSensorName = data.hwinfo.sensors[j].sensorNameUser || data.hwinfo.sensors[j].sensorName || "HWiNFO";
-                            break;
-                        }
-                    }
-                }
-                const label = r.labelUser || r.label || "Sensor";
-                const uniqueId = `remotehw_${currentSensorName}_${label}`.replace(/\s+/g, '_');
-                hwValueMap[uniqueId] = { value: r.value, unit: r.unit || '' };
-                if (persistentSensorMap[uniqueId]) {
-                    persistentSensorMap[uniqueId].rawVal = r.value;
-                    persistentSensorMap[uniqueId].rawUnit = r.unit || '';
-                }
-            }
         }
 
         function buildLhmValueMap(node, depth = 0, deviceName = "", sensorTypeName = "") {
@@ -3592,13 +3745,14 @@
 
             let hwSuccess = false;
             let lhmSuccess = false;
+            lastPolledSensorIds.clear();
 
             try {
                 const hwRes = await fetch(`http://${hwinfoIp}/json.json`, { signal: AbortSignal.timeout(3000) });
                 if (hwRes.ok) {
                     const hwData = await hwRes.json();
-                    parseRemoteHwInfoJson(hwData);
                     buildHwValueMap(hwData);
+                    parseRemoteHwInfoJson(hwData);
                     hwSuccess = true;
                 }
             } catch (e) {}
@@ -3665,9 +3819,6 @@
                             history.push(numericVal);
                             if (history.length > MAX_HISTORY) history.shift();
 
-                            chartInstances[chart.id].data.datasets[0].data = history;
-                            chartInstances[chart.id].update('none');
-
                             let colorSensorVal = undefined;
                             const dc = chart.dynamicColor;
                             if (dc && dc.enabled && dc.colorSensorId) {
@@ -3678,6 +3829,11 @@
                                 }
                             }
                             const dynColor = getDynamicChartColor(chart, numericVal, colorSensorVal);
+
+                            // Perf: set data + color on the dataset first, then redraw the canvas ONCE.
+                            // (Previously the chart was redrawn twice per poll: once for the data push,
+                            // then a second time inside applyChartColor even when the color was unchanged.)
+                            chartInstances[chart.id].data.datasets[0].data = history;
                             applyChartColor(chart.id, dynColor);
                         }
                     } else {
@@ -3700,17 +3856,18 @@
 
                         if (valEl) {
                             valEl.innerText = formattedText;
-                            const dynColor = getSensorColor(sensor, numericVal);
-                            valEl.style.color = dynColor || '';
                         }
+                        // Compute once, reuse for both the text color and the sparkline —
+                        // was being computed twice per sensor per poll (each re-sorting thresholds).
+                        const dynColor = getSensorColor(sensor, numericVal);
+                        if (valEl) valEl.style.color = dynColor || '';
 
                         // Sparkline
                         if (sensor.sparkline) {
                             if (!sparklineHistories[sensor.id]) sparklineHistories[sensor.id] = [];
                             sparklineHistories[sensor.id].push(numericVal);
                             if (sparklineHistories[sensor.id].length > SPARKLINE_MAX) sparklineHistories[sensor.id].shift();
-                            const sparkColor = getSensorColor(sensor, numericVal) || '#38bdf8';
-                            renderSparkline(`spark-${sensor.id}`, sparklineHistories[sensor.id], sparkColor);
+                            renderSparkline(`spark-${sensor.id}`, sparklineHistories[sensor.id], dynColor || '#38bdf8');
                         }
 
                         if (!sessionMinMax[sensor.id]) {
