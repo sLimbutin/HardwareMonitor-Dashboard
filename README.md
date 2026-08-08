@@ -251,7 +251,7 @@ The dashboard can be accessed from another device on the same local network.
 
 This makes it possible to turn an old tablet or secondary display into a dedicated hardware monitoring screen.
 
-Script to open required ports for local network usage is included in the release archive.
+Script to open required default ports for local network usage is included in the release archive.
 
 ---
 
