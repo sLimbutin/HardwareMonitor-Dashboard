@@ -1,52 +1,233 @@
-# HardwareMonitor Dashboard
+HardwareMonitor Dashboard
 
-Lightweight hardware monitoring for your computer hardware in real time.
+A modern, customizable hardware monitoring dashboard for displaying real-time PC sensor data in a clean and highly configurable interface.
 
-## 1. System Requirements & Setup
+HardwareMonitor Dashboard can combine data from HWiNFO, Libre Hardware Monitor, or OpenHardwareMonitor and display it through customizable cards, charts, sensors, alerts, and themes.
 
-To stream metrics into the dashboard, you must have one or both of the following software running in the background with a web server enabled:
+✨ Features
+📊 Real-time hardware monitoring
+🖥️ Customizable dashboard layout
+🎨 Multiple built-in themes
+🌈 Fully customizable colors
+📈 Live sensor charts
+🚨 Sensor thresholds and visual alerts
+📉 Trend sparklines
+🔄 Global and per-card refresh rates
+🧩 Drag-and-drop card ordering
+📐 Custom card sizes and sensor columns
+👀 Live configuration previews
+🌡️ Unit conversion support
+💾 JSON configuration export/import
+🖥️ Custom resolution scaling
+🌐 Remote monitoring over your local network
+📡 Supported Hardware Sources
 
--   **HWiNFO:** Download HWiNFO [here](https://www.hwinfo.com/download/) and requires the [RemoteHWInfo](https://github.com/Demion/remotehwinfo) server enabled.
--   **Libre Hardware Monitor (LHM) or OpenHardwareMonitor (OHM):** Download Libre Hardware Monitor [here](https://github.scom/LibreHardwareMonitor/LibreHardwareMonitor) or OpenHardwareMonitor [here](https://github.com/HardwareMonitor/openhardwaremonitor) (requires the built-in Remote Web Server enabled in the settings).
+The dashboard can receive sensor data from one or both of the following sources:
 
-## 2. Opening and Managing Settings
+HWiNFO
 
-To customize the layout, cards, and metrics, click the Settings button in the top right corner.
+HWiNFO is supported through the RemoteHWInfo server.
 
-### A. Theme Customization, Presets & Language
+Enable the RemoteHWInfo server and configure its address and port in the dashboard settings.
 
-Choose a built-in theme or manually adjust all colors using the color pickers:
+Libre Hardware Monitor
 
--   **Preset Themes:** Midnight Obsidian, Cyberpunk Neon, Nordic Frost, Clean Light, Retro Console, Matrix Grid.
--   **Color Fields:** Background (--bg), card background (--card), chart sub-containers (--card-sub), accent colors (--accent), as well as text and border colors.
+Libre Hardware Monitor can be used with its built-in Remote Web Server.
 
-Language Selection
+OpenHardwareMonitor
 
-You can change dashboard language. Supported languages include:
+OpenHardwareMonitor is also supported through its built-in Remote Web Server.
 
--   English
--   Finnish
--   Svenska
--   Deutsch
+🚀 Getting Started
+1. Start a Hardware Monitoring Source
 
-### B. Connection Settings & Resolution
+Run at least one supported hardware monitoring application:
 
--   Run included firewall port-opening script if running dashboard on another device on the same network (e.g. tablet).
--   **HWiNFO/LHM IP:Port:** Define the IP addresses and ports for your hardware sources (e.g., HWiNFO 127.0.0.1:60000 and LHM 127.0.0.1:8085).
--   **Polling Rate (ms):** Define how often data is refreshed in milliseconds (e.g., 4000 = 4 seconds). Click Save & Test when finished.
--   **Resolution Settings:** Choose a preset resolution base or enter a custom width and height to scale the dashboard perfectly for a dedicated sensor display.
+HWiNFO + RemoteHWInfo
+Libre Hardware Monitor
+OpenHardwareMonitor
 
-### C. Export and Import Settings
+Make sure its web server is enabled.
 
--   **Export Settings (JSON):** Back up your current layout, cards, and theme to a file.
--   **Import Settings (JSON):** Restore or load a layout template from a file.
+2. Start the Dashboard
 
-## 4. Managing Cards and Metrics
+Launch the dashboard and open Settings.
 
-At the bottom of the settings panel, you will find a list of current Cards that you can modify as follows:
+3. Configure the Connection
 
--   **Card Order:** Move cards up or down using the control buttons.
--   **Card Dimensions:** Use sliders to adjust card width (colSpan 1-12), height, and the number of sensor columns.
--   **Charts:** Add live line charts to cards for real-time tracking. Choose the desired metric, color, decimal places, and unit conversion (e.g., MHz to GHz or °C to °F).
--   **Text Sensors & Alerts:** Add individual text-based metrics to a card. You can set an alert value threshold; if exceeded, the value turns red and the respective card activates an alert border (alert-active).
+Enter the IP address and port of your hardware monitoring source.
 
+Example configuration:
+
+HWiNFO: 127.0.0.1:60000
+LHM:    127.0.0.1:8085
+
+Configure the polling interval according to your needs.
+
+For example:
+
+4000 ms = 4 seconds
+
+Click Save & Test to verify the connection.
+
+⚙️ Configuration
+
+The dashboard provides extensive customization through the Settings panel.
+
+🎨 Themes
+
+Several built-in presets are available:
+
+Midnight Obsidian
+Cyberpunk Neon
+Nordic Frost
+Clean Light
+Retro Console
+Matrix Grid
+
+You can also customize individual colors, including:
+
+Background
+Card background
+Chart containers
+Accent color
+Text
+Borders
+🧩 Dashboard Cards
+
+Cards are the main building blocks of the dashboard.
+
+Each card can be customized independently.
+
+Layout
+Reorder cards using the controls in Settings
+Drag and drop cards directly on the dashboard
+Adjust card width
+Adjust card height
+Configure the number of sensor columns
+Collapsible Sections
+
+Cards and their internal groups can be collapsed to keep complex dashboards organized.
+
+Live Preview
+
+While editing a card, the configuration interface provides a live preview with animated mock values.
+
+This allows you to configure the dashboard without constantly switching between the settings and dashboard views.
+
+📈 Charts
+
+Cards can contain live line charts for monitoring sensor values over time.
+
+Charts support:
+
+Custom metrics
+Custom colors
+Font size
+Decimal precision
+Unit conversion
+Area fill
+Line width
+Side-by-side or stacked layouts
+
+Multiple charts can be customized individually, or the Paint All Charts control can be used to apply a color across all charts in a card.
+
+📊 Text Sensors
+
+Text sensors provide a compact way of displaying individual hardware metrics.
+
+They support:
+
+Custom sensor values
+Alert thresholds
+Trend sparklines
+Dynamic color thresholds
+Multiple value-based colors
+
+For example, a sensor can change color when a value reaches a specified threshold:
+
+Value ≥ X → Custom color
+
+When an alert threshold is exceeded, the sensor value turns red and the associated card can display an alert border.
+
+🔄 Refresh Rates
+
+The dashboard supports both global and per-card refresh rates.
+
+Global Polling Rate
+
+Controls how frequently hardware data is retrieved.
+
+Example:
+
+4000 ms → refresh every 4 seconds
+Per-Card Refresh Rate
+
+Individual cards can override the global polling interval.
+
+This allows frequently changing sensors to update faster while keeping less important cards at a lower refresh rate.
+
+🖥️ Resolution & Dedicated Displays
+
+The dashboard can be configured for dedicated sensor displays.
+
+You can select a predefined resolution or enter a custom:
+
+Width × Height
+
+This is useful for setups such as:
+
+Secondary monitors
+Small sensor displays
+Tablets
+Dedicated monitoring screens
+
+If the dashboard is accessed from another device on the same network, the included firewall port-opening script may be required.
+
+💾 Import & Export
+
+Dashboard configurations can be backed up and transferred using JSON files.
+
+Export
+
+Export your current:
+
+Layout
+Cards
+Sensor configuration
+Theme settings
+
+to a JSON file.
+
+Import
+
+Import a previously exported JSON configuration to restore or share a dashboard layout.
+
+This also makes it easy to create and distribute custom dashboard presets.
+
+🌐 Remote Monitoring
+
+The dashboard can be accessed from another device on the same local network.
+
+This makes it possible to turn an old tablet or secondary display into a dedicated hardware monitoring screen.
+
+📋 Requirements
+
+At least one supported hardware monitoring backend is required:
+
+Backend	Web Server
+HWiNFO	RemoteHWInfo
+Libre Hardware Monitor	Built-in Remote Web Server
+OpenHardwareMonitor	Built-in Remote Web Server
+
+🤝 Contributing
+
+Contributions, suggestions, bug reports, and feature requests are welcome.
+
+If you find a problem or have an idea for improving the dashboard, feel free to open an Issue or submit a Pull Request.
+
+⭐ Support
+
+If you find HardwareMonitor Dashboard useful, consider giving the repository a ⭐ on GitHub.
+
+Enjoy building your own monitoring dashboard!
