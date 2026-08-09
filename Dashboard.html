@@ -89,6 +89,29 @@
             font-family: var(--mono-font);
         }
 
+        .battery-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            background: var(--card-sub);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-family: var(--mono-font);
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .battery-badge.battery-low {
+            color: #f43f5e;
+            border-color: #f43f5e;
+        }
+        .battery-badge.battery-charging {
+            color: #22c55e;
+        }
+        #battery-icon { font-size: 1.15rem; line-height: 1; }
+
         .lang-select, select, input, button {
             font-family: var(--base-font);
         }
@@ -1011,6 +1034,9 @@
         <header>
             <h1 data-i18n="main_title">Hardware <span>Monitor</span></h1>
             <div style="display: flex; align-items: center; gap: 16px;">
+                <span id="battery-indicator" class="battery-badge" style="display:none;" title="">
+                    <span id="battery-icon">🔋</span><span id="battery-percent">--%</span>
+                </span>
                 <span id="connection-status" class="status err" data-i18n="status_connecting">Connecting...</span>
                 <div id="header-clock" class="header-clock">00:00 | 01.01.2026</div>
                 <button class="btn-icon" onclick="toggleSettings()" data-i18n="btn_settings">⚙️ Settings</button>
@@ -1205,6 +1231,40 @@
             </div>
         </div>
 
+        <div class="settings-card-box" style="border: 1px solid var(--border);">
+            <h3 style="color: var(--accent); margin-bottom: 16px; font-size: 1rem; font-weight: 700;" data-i18n="battery_section_title">🔋 Battery Indicator</h3>
+            <div class="input-group">
+                <label style="display:flex; align-items:center; gap:9px; cursor:pointer;">
+                    <input type="checkbox" id="battery-toggle" onchange="toggleBatteryIndicator(this.checked)" style="accent-color:var(--accent); width:16px; height:16px;">
+                    <span style="color: var(--text); font-size: 0.9rem;" data-i18n="battery_toggle_label">Show battery status in the header (e.g. for the tablet/device running this dashboard)</span>
+                </label>
+            </div>
+            <p id="battery-unsupported-msg" style="display:none; font-size: 0.82rem; color: var(--muted); margin-top: 10px; margin-bottom: 0;" data-i18n="battery_unsupported">Your browser does not support battery status reporting (this API is only available on some Chromium-based browsers).</p>
+        </div>
+
+        <div class="settings-card-box" style="border: 1px solid var(--border);">
+            <h3 style="color: var(--accent); margin-bottom: 16px; font-size: 1rem; font-weight: 700;" data-i18n="clock_section_title">🕐 Clock Format</h3>
+            <div class="input-group" style="margin-bottom: 14px;">
+                <strong style="color: var(--text); min-width: 140px; font-size: 0.9rem;" data-i18n="clock_time_format_label">Time Format:</strong>
+                <select id="clockTimeFormatSelect" onchange="updateClockFormat('time', this.value)" style="width: 260px; min-width: 200px;">
+                    <option value="24">24h — 14:05</option>
+                    <option value="24s">24h + seconds — 14:05:32</option>
+                    <option value="12">12h — 02:05 PM</option>
+                    <option value="12s">12h + seconds — 02:05:32 PM</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <strong style="color: var(--text); min-width: 140px; font-size: 0.9rem;" data-i18n="clock_date_format_label">Date Format:</strong>
+                <select id="clockDateFormatSelect" onchange="updateClockFormat('date', this.value)" style="width: 260px; min-width: 200px;">
+                    <option value="dmy_dot">DD.MM.YYYY — 09.08.2026</option>
+                    <option value="dmy_slash">DD/MM/YYYY — 09/08/2026</option>
+                    <option value="mdy_slash">MM/DD/YYYY — 08/09/2026</option>
+                    <option value="ymd_dash">YYYY-MM-DD — 2026-08-09</option>
+                    <option value="none" data-i18n="clock_date_hidden">Hidden</option>
+                </select>
+            </div>
+        </div>
+
         </div> <!-- end tab-appearance -->
 
         <div id="tab-connection" class="settings-tab-content">
@@ -1355,7 +1415,16 @@
                 lbl_ge_value: "≥ Value:",
                 lbl_color: "Color:",
                 btn_add_threshold: "+ Add Threshold",
-                btn_add_short: "+ Add"
+                btn_add_short: "+ Add",
+                battery_section_title: "🔋 Battery Indicator",
+                battery_toggle_label: "Show battery status in the header (e.g. for the tablet/device running this dashboard)",
+                battery_unsupported: "Your browser does not support battery status reporting (this API is only available on some Chromium-based browsers).",
+                battery_charging_tip: "Charging",
+                battery_level_tip: "Battery level",
+                clock_section_title: "🕐 Clock Format",
+                clock_time_format_label: "Time Format:",
+                clock_date_format_label: "Date Format:",
+                clock_date_hidden: "Hidden"
             },
             fi: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1443,7 +1512,16 @@
                 lbl_ge_value: "≥ Arvo:",
                 lbl_color: "Väri:",
                 btn_add_threshold: "+ Lisää kynnysarvo",
-                btn_add_short: "+ Lisää"
+                btn_add_short: "+ Lisää",
+                battery_section_title: "🔋 Akkumittari",
+                battery_toggle_label: "Näytä akun tila yläpalkissa (esim. laitteelle/tabletille jolla tätä paneelia ajetaan)",
+                battery_unsupported: "Selaimesi ei tue akun tilan raportointia (tämä API on käytössä vain joissakin Chromium-pohjaisissa selaimissa).",
+                battery_charging_tip: "Latautuu",
+                battery_level_tip: "Akun varaustaso",
+                clock_section_title: "🕐 Kellon Muoto",
+                clock_time_format_label: "Kellonajan muoto:",
+                clock_date_format_label: "Päivämäärän muoto:",
+                clock_date_hidden: "Piilotettu"
             },
             sv: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1531,7 +1609,16 @@
                 lbl_ge_value: "≥ Värde:",
                 lbl_color: "Färg:",
                 btn_add_threshold: "+ Lägg till tröskelvärde",
-                btn_add_short: "+ Lägg till"
+                btn_add_short: "+ Lägg till",
+                battery_section_title: "🔋 Batteriindikator",
+                battery_toggle_label: "Visa batteristatus i sidhuvudet (t.ex. för surfplattan/enheten som kör denna instrumentpanel)",
+                battery_unsupported: "Din webbläsare stöder inte batteristatusrapportering (detta API är endast tillgängligt i vissa Chromium-baserade webbläsare).",
+                battery_charging_tip: "Laddar",
+                battery_level_tip: "Batterinivå",
+                clock_section_title: "🕐 Klockformat",
+                clock_time_format_label: "Tidsformat:",
+                clock_date_format_label: "Datumformat:",
+                clock_date_hidden: "Dold"
             },
             de: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1619,7 +1706,16 @@
                 lbl_ge_value: "≥ Wert:",
                 lbl_color: "Farbe:",
                 btn_add_threshold: "+ Schwellenwert hinzufügen",
-                btn_add_short: "+ Hinzufügen"
+                btn_add_short: "+ Hinzufügen",
+                battery_section_title: "🔋 Akkuanzeige",
+                battery_toggle_label: "Akkustatus im Header anzeigen (z. B. für das Tablet/Gerät, auf dem dieses Dashboard läuft)",
+                battery_unsupported: "Ihr Browser unterstützt keine Akkustatus-Meldung (diese API ist nur in einigen Chromium-basierten Browsern verfügbar).",
+                battery_charging_tip: "Wird geladen",
+                battery_level_tip: "Akkustand",
+                clock_section_title: "🕐 Uhrzeitformat",
+                clock_time_format_label: "Zeitformat:",
+                clock_date_format_label: "Datumsformat:",
+                clock_date_hidden: "Ausgeblendet"
             }
         };
 
@@ -1670,21 +1766,64 @@
         let currentFontFamily = localStorage.getItem('remotehwinfo_font_family') || "'Plus Jakarta Sans', sans-serif";
         let activeThemePresetKey = localStorage.getItem('remotehwinfo_theme_preset') || 'midnight';
 
+        let clockTimeFormat = localStorage.getItem('clock_time_format') || '24';
+        let clockDateFormat = localStorage.getItem('clock_date_format') || 'dmy_dot';
+
         function updateClock() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
+            let hours24 = now.getHours();
             const mins = String(now.getMinutes()).padStart(2, '0');
+            const secs = String(now.getSeconds()).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const year = now.getFullYear();
-            
+
+            let timeStr;
+            if (clockTimeFormat === '12' || clockTimeFormat === '12s') {
+                const suffix = hours24 >= 12 ? 'PM' : 'AM';
+                let hours12 = hours24 % 12;
+                if (hours12 === 0) hours12 = 12;
+                const h = String(hours12).padStart(2, '0');
+                timeStr = clockTimeFormat === '12s' ? `${h}:${mins}:${secs} ${suffix}` : `${h}:${mins} ${suffix}`;
+            } else {
+                const h = String(hours24).padStart(2, '0');
+                timeStr = clockTimeFormat === '24s' ? `${h}:${mins}:${secs}` : `${h}:${mins}`;
+            }
+
+            let dateStr = '';
+            switch (clockDateFormat) {
+                case 'dmy_slash': dateStr = `${day}/${month}/${year}`; break;
+                case 'mdy_slash': dateStr = `${month}/${day}/${year}`; break;
+                case 'ymd_dash': dateStr = `${year}-${month}-${day}`; break;
+                case 'none': dateStr = ''; break;
+                default: dateStr = `${day}.${month}.${year}`; // dmy_dot
+            }
+
             const clockEl = document.getElementById('header-clock');
             if (clockEl) {
-                clockEl.innerText = `${hours}:${mins} | ${day}.${month}.${year}`;
+                clockEl.innerText = dateStr ? `${timeStr} | ${dateStr}` : timeStr;
             }
         }
         setInterval(updateClock, 1000);
         updateClock();
+
+        function updateClockFormat(kind, val) {
+            if (kind === 'time') {
+                clockTimeFormat = val;
+                localStorage.setItem('clock_time_format', val);
+            } else {
+                clockDateFormat = val;
+                localStorage.setItem('clock_date_format', val);
+            }
+            updateClock();
+        }
+
+        function loadClockFormatPrefs() {
+            const timeSelect = document.getElementById('clockTimeFormatSelect');
+            const dateSelect = document.getElementById('clockDateFormatSelect');
+            if (timeSelect) timeSelect.value = clockTimeFormat;
+            if (dateSelect) dateSelect.value = clockDateFormat;
+        }
 
         function changeLanguage(lang) {
             localStorage.setItem('dashboard_lang', lang);
@@ -2051,6 +2190,69 @@
             const val = document.getElementById('settings-font-size-val');
             if (slider) slider.value = saved;
             if (val) val.innerText = `${saved}%`;
+        }
+
+        // ---- Toggleable battery indicator (e.g. for a tablet running the dashboard) ----
+        // Uses the browser's Battery Status API. Support is limited (mainly Chromium-based
+        // browsers on Android/ChromeOS; Firefox and Safari removed it for privacy reasons),
+        // so this degrades gracefully with a small notice instead of failing silently.
+        let batteryManager = null;
+        function updateBatteryDisplay() {
+            if (!batteryManager) return;
+            const badge = document.getElementById('battery-indicator');
+            const icon = document.getElementById('battery-icon');
+            const pct = document.getElementById('battery-percent');
+            const level = Math.round(batteryManager.level * 100);
+            const charging = batteryManager.charging;
+
+            pct.innerText = `${level}%`;
+            icon.innerText = charging ? '🔌' : (level <= 15 ? '🪫' : '🔋');
+            badge.classList.toggle('battery-low', level <= 15 && !charging);
+            badge.classList.toggle('battery-charging', charging);
+            const lang = localStorage.getItem('dashboard_lang') || 'en';
+            const t = translations[lang] || translations.en;
+            badge.title = charging ? (t.battery_charging_tip || 'Charging') : (t.battery_level_tip || 'Battery level');
+        }
+
+        function initBattery() {
+            if (batteryManager) { updateBatteryDisplay(); return; }
+            if (!navigator.getBattery) {
+                const msg = document.getElementById('battery-unsupported-msg');
+                if (msg) msg.style.display = 'block';
+                const toggle = document.getElementById('battery-toggle');
+                if (toggle) { toggle.disabled = true; toggle.checked = false; }
+                return;
+            }
+            navigator.getBattery().then(battery => {
+                batteryManager = battery;
+                battery.addEventListener('levelchange', updateBatteryDisplay);
+                battery.addEventListener('chargingchange', updateBatteryDisplay);
+                updateBatteryDisplay();
+            }).catch(() => {
+                const msg = document.getElementById('battery-unsupported-msg');
+                if (msg) msg.style.display = 'block';
+            });
+        }
+
+        function toggleBatteryIndicator(enabled) {
+            localStorage.setItem('show_battery_indicator', enabled ? 'true' : 'false');
+            const badge = document.getElementById('battery-indicator');
+            if (enabled) {
+                badge.style.display = 'flex';
+                initBattery();
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function loadBatteryIndicatorPref() {
+            const enabled = localStorage.getItem('show_battery_indicator') === 'true';
+            const toggle = document.getElementById('battery-toggle');
+            if (toggle) toggle.checked = enabled;
+            if (enabled) {
+                document.getElementById('battery-indicator').style.display = 'flex';
+                initBattery();
+            }
         }
 
         function moveCardUp(cIndex) {
@@ -3910,6 +4112,8 @@
         renderSettingsDOM(true);
         changeLanguage(savedLang);
         loadSettingsFontSize();
+        loadBatteryIndicatorPref();
+        loadClockFormatPrefs();
 
         fetchAllSensorsOnce().then(() => {
             renderSettingsDOM(false);
