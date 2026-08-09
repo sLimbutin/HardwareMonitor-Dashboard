@@ -563,7 +563,7 @@
         /* Split layout: form on the left, live-ish preview on the right */
         .card-edit-layout {
             display: grid;
-            grid-template-columns: 1fr 460px;
+            grid-template-columns: 1.05fr 1fr;
             gap: 20px;
             align-items: stretch;
         }
@@ -579,7 +579,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            background: var(--bg);
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 16px;
@@ -596,16 +596,29 @@
         }
         @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
         .card-preview-wrap {
-            width: 420px;
-            height: 520px;
+            /* Actual width/height are set inline per card (see updateCardPreviewSize()) so the
+               thumbnail mirrors the card's real colSpan/rowSpan aspect ratio instead of always
+               being the same fixed box. These are just sane fallbacks before JS runs. */
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 300px;
             border-radius: 20px;
             overflow: hidden;
             flex-shrink: 0;
             margin: 0 auto;
+            transition: width 0.15s ease, height 0.15s ease;
         }
         .card-preview-wrap .card {
-            width: 100%;
-            height: 100%;
+            /* Rendered at its real, unscaled pixel size (set inline by updateCardPreviewSize())
+               and then visually shrunk with transform: scale() to fit the small wrap box.
+               This scales fonts, padding and charts all together in proportion — sizing the
+               wrap itself down without this would just clip the (still full-size) content
+               instead of shrinking it. */
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: top left;
             cursor: default;
         }
         .card-preview-wrap .card-title { cursor: default; }
@@ -613,7 +626,6 @@
             .card-edit-layout { grid-template-columns: 1fr; }
             .card-preview-col { height: auto; }
             .card-preview-panel { position: static; }
-            .card-preview-wrap { width: 100%; max-width: 420px; }
         }
         /* Preview must ignore the settings-panel font-size override so it looks like the real dashboard */
         #settings-panel .card-preview-wrap,
@@ -1056,10 +1068,10 @@
         </div>
 
         <div class="settings-tabs">
-            <button class="settings-tab active" onclick="switchSettingsTab('tab-appearance', this)">🎨 Appearance</button>
-            <button class="settings-tab" onclick="switchSettingsTab('tab-connection', this)">🔌 Connection</button>
-            <button class="settings-tab" onclick="switchSettingsTab('tab-cards', this)">📦 Cards</button>
-            <button class="settings-tab" onclick="switchSettingsTab('tab-io', this)">💾 Import / Export</button>
+            <button class="settings-tab active" onclick="switchSettingsTab('tab-appearance', this)" data-i18n="tab_appearance">🎨 Appearance</button>
+            <button class="settings-tab" onclick="switchSettingsTab('tab-connection', this)" data-i18n="tab_connection">🔌 Connection</button>
+            <button class="settings-tab" onclick="switchSettingsTab('tab-cards', this)" data-i18n="tab_cards">📦 Cards</button>
+            <button class="settings-tab" onclick="switchSettingsTab('tab-io', this)" data-i18n="tab_io">💾 Import / Export</button>
         </div>
 
         <div class="settings-body">
@@ -1311,7 +1323,7 @@
                 <button class="btn-small" onclick="exportLayoutConfig()" style="padding: 10px 16px;" data-i18n="btn_export">📁 Export Settings (JSON)</button>
                 <label for="import-file-input" class="btn-small" style="padding: 10px 16px; cursor: pointer; display: inline-flex; align-items: center;" data-i18n="btn_import">📂 Import Settings (JSON)</label>
                 <input type="file" id="import-file-input" accept=".json" onchange="importLayoutConfig(event)" style="display: none;">
-                <button class="btn-small" onclick="resetPersistentSensors()" style="padding: 10px 16px; color: var(--danger); border-color: var(--danger);">🔄 Reset Sensor Cache</button>
+                <button class="btn-small" onclick="resetPersistentSensors()" style="padding: 10px 16px; color: var(--danger); border-color: var(--danger);" data-i18n="btn_reset_sensor_cache">🔄 Reset Sensor Cache</button>
             </div>
         </div>
         </div> <!-- end tab-io -->
@@ -1424,7 +1436,46 @@
                 clock_section_title: "🕐 Clock Format",
                 clock_time_format_label: "Time Format:",
                 clock_date_format_label: "Date Format:",
-                clock_date_hidden: "Hidden"
+                clock_date_hidden: "Hidden",
+                fs_small: "Small",
+                fs_normal: "Normal",
+                fs_large: "Large",
+                fs_xl: "XL",
+                conv_none: "No Conversion",
+                conv_mhz_ghz: "MHz -> GHz",
+                conv_ghz_mhz: "GHz -> MHz",
+                conv_c_f: "°C -> °F",
+                conv_f_c: "°F -> °C",
+                conv_auto_speed: "Auto Transfer Rate",
+                conv_bytes_mb: "Bytes -> MB",
+                conv_bytes_gb: "Bytes -> GB",
+                conv_mb_gb: "MB -> GB",
+                conv_rpm: "RPM",
+                conv_percent: "Force %",
+                conv_volts: "Volts (V)",
+                conv_watts: "Watts (W)",
+                fill_on: "Area Fill: On",
+                fill_off: "Area Fill: Off",
+                linewidth_prefix: "Line Width: ",
+                tab_appearance: "🎨 Appearance",
+                tab_connection: "🔌 Connection",
+                tab_cards: "📦 Cards",
+                tab_io: "💾 Import / Export",
+                btn_reset_sensor_cache: "🔄 Reset Sensor Cache",
+                alert_res_updated: "Resolution updated to",
+                alert_invalid_resolution: "Please enter valid width (min 600) and height (min 400).",
+                alert_sensor_cache_cleared: "Sensor cache cleared!",
+                alert_invalid_json: "Invalid JSON file structure.",
+                alert_settings_loaded: "Settings loaded successfully!",
+                alert_error_reading_file: "Error reading file!",
+                confirm_reset_defaults: "Reset to default settings?",
+                confirm_remove_card: "Remove this card?",
+                feedback_sensor_lists_updated: "Sensor lists updated!",
+                lbl_sensor_colon: "Sensor:",
+                lbl_placement_colon: "Placement:",
+                sparkline_label: "Sparkline",
+                sparkline_tooltip: "Show sparkline trend next to value",
+                lbl_decimals_tooltip: "Decimals"
             },
             fi: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1521,7 +1572,46 @@
                 clock_section_title: "🕐 Kellon Muoto",
                 clock_time_format_label: "Kellonajan muoto:",
                 clock_date_format_label: "Päivämäärän muoto:",
-                clock_date_hidden: "Piilotettu"
+                clock_date_hidden: "Piilotettu",
+                fs_small: "Pieni",
+                fs_normal: "Normaali",
+                fs_large: "Suuri",
+                fs_xl: "XL",
+                conv_none: "Ei muunnosta",
+                conv_mhz_ghz: "MHz -> GHz",
+                conv_ghz_mhz: "GHz -> MHz",
+                conv_c_f: "°C -> °F",
+                conv_f_c: "°F -> °C",
+                conv_auto_speed: "Automaattinen siirtonopeus",
+                conv_bytes_mb: "Tavut -> MB",
+                conv_bytes_gb: "Tavut -> GB",
+                conv_mb_gb: "MB -> GB",
+                conv_rpm: "RPM",
+                conv_percent: "Pakota %",
+                conv_volts: "Voltit (V)",
+                conv_watts: "Watit (W)",
+                fill_on: "Täyttöväri: Päällä",
+                fill_off: "Täyttöväri: Pois",
+                linewidth_prefix: "Viivan paksuus: ",
+                tab_appearance: "🎨 Ulkoasu",
+                tab_connection: "🔌 Yhteys",
+                tab_cards: "📦 Kortit",
+                tab_io: "💾 Vienti / Tuonti",
+                btn_reset_sensor_cache: "🔄 Tyhjennä anturivälimuisti",
+                alert_res_updated: "Resoluutio päivitetty:",
+                alert_invalid_resolution: "Anna kelvollinen leveys (väh. 600) ja korkeus (väh. 400).",
+                alert_sensor_cache_cleared: "Anturivälimuisti tyhjennetty!",
+                alert_invalid_json: "Virheellinen JSON-tiedoston rakenne.",
+                alert_settings_loaded: "Asetukset ladattu onnistuneesti!",
+                alert_error_reading_file: "Virhe tiedoston lukemisessa!",
+                confirm_reset_defaults: "Palautetaanko oletusasetukset?",
+                confirm_remove_card: "Poistetaanko tämä kortti?",
+                feedback_sensor_lists_updated: "Anturilistat päivitetty!",
+                lbl_sensor_colon: "Anturi:",
+                lbl_placement_colon: "Sijoittelu:",
+                sparkline_label: "Trendiviiva",
+                sparkline_tooltip: "Näytä pieni trendikäyrä arvon vieressä",
+                lbl_decimals_tooltip: "Desimaalit"
             },
             sv: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1618,7 +1708,46 @@
                 clock_section_title: "🕐 Klockformat",
                 clock_time_format_label: "Tidsformat:",
                 clock_date_format_label: "Datumformat:",
-                clock_date_hidden: "Dold"
+                clock_date_hidden: "Dold",
+                fs_small: "Liten",
+                fs_normal: "Normal",
+                fs_large: "Stor",
+                fs_xl: "XL",
+                conv_none: "Ingen konvertering",
+                conv_mhz_ghz: "MHz -> GHz",
+                conv_ghz_mhz: "GHz -> MHz",
+                conv_c_f: "°C -> °F",
+                conv_f_c: "°F -> °C",
+                conv_auto_speed: "Automatisk överföringshastighet",
+                conv_bytes_mb: "Bytes -> MB",
+                conv_bytes_gb: "Bytes -> GB",
+                conv_mb_gb: "MB -> GB",
+                conv_rpm: "RPM",
+                conv_percent: "Kraft %",
+                conv_volts: "Volt (V)",
+                conv_watts: "Watt (W)",
+                fill_on: "Områdesfyllning: På",
+                fill_off: "Områdesfyllning: Av",
+                linewidth_prefix: "Linjebredd: ",
+                tab_appearance: "🎨 Utseende",
+                tab_connection: "🔌 Anslutning",
+                tab_cards: "📦 Kort",
+                tab_io: "💾 Export / Import",
+                btn_reset_sensor_cache: "🔄 Återställ sensorcache",
+                alert_res_updated: "Upplösning uppdaterad till",
+                alert_invalid_resolution: "Ange en giltig bredd (min 600) och höjd (min 400).",
+                alert_sensor_cache_cleared: "Sensorcachen har rensats!",
+                alert_invalid_json: "Ogiltig JSON-filstruktur.",
+                alert_settings_loaded: "Inställningarna har laddats!",
+                alert_error_reading_file: "Fel vid läsning av filen!",
+                confirm_reset_defaults: "Återställa till standardinställningar?",
+                confirm_remove_card: "Ta bort det här kortet?",
+                feedback_sensor_lists_updated: "Sensorlistorna har uppdaterats!",
+                lbl_sensor_colon: "Sensor:",
+                lbl_placement_colon: "Placering:",
+                sparkline_label: "Trendlinje",
+                sparkline_tooltip: "Visa en liten trendlinje bredvid värdet",
+                lbl_decimals_tooltip: "Decimaler"
             },
             de: {
                 meta_title: "Hardware Monitor Dashboard",
@@ -1715,7 +1844,46 @@
                 clock_section_title: "🕐 Uhrzeitformat",
                 clock_time_format_label: "Zeitformat:",
                 clock_date_format_label: "Datumsformat:",
-                clock_date_hidden: "Ausgeblendet"
+                clock_date_hidden: "Ausgeblendet",
+                fs_small: "Klein",
+                fs_normal: "Normal",
+                fs_large: "Groß",
+                fs_xl: "XL",
+                conv_none: "Keine Umrechnung",
+                conv_mhz_ghz: "MHz -> GHz",
+                conv_ghz_mhz: "GHz -> MHz",
+                conv_c_f: "°C -> °F",
+                conv_f_c: "°F -> °C",
+                conv_auto_speed: "Automatische Übertragungsrate",
+                conv_bytes_mb: "Bytes -> MB",
+                conv_bytes_gb: "Bytes -> GB",
+                conv_mb_gb: "MB -> GB",
+                conv_rpm: "RPM",
+                conv_percent: "Kraft %",
+                conv_volts: "Volt (V)",
+                conv_watts: "Watt (W)",
+                fill_on: "Flächenfüllung: Ein",
+                fill_off: "Flächenfüllung: Aus",
+                linewidth_prefix: "Linienbreite: ",
+                tab_appearance: "🎨 Erscheinungsbild",
+                tab_connection: "🔌 Verbindung",
+                tab_cards: "📦 Karten",
+                tab_io: "💾 Export / Import",
+                btn_reset_sensor_cache: "🔄 Sensor-Cache zurücksetzen",
+                alert_res_updated: "Auflösung aktualisiert auf",
+                alert_invalid_resolution: "Bitte gültige Breite (min. 600) und Höhe (min. 400) eingeben.",
+                alert_sensor_cache_cleared: "Sensor-Cache geleert!",
+                alert_invalid_json: "Ungültige JSON-Dateistruktur.",
+                alert_settings_loaded: "Einstellungen erfolgreich geladen!",
+                alert_error_reading_file: "Fehler beim Lesen der Datei!",
+                confirm_reset_defaults: "Auf Standardeinstellungen zurücksetzen?",
+                confirm_remove_card: "Diese Karte entfernen?",
+                feedback_sensor_lists_updated: "Sensorlisten aktualisiert!",
+                lbl_sensor_colon: "Sensor:",
+                lbl_placement_colon: "Platzierung:",
+                sparkline_label: "Sparkline",
+                sparkline_tooltip: "Kleine Trendlinie neben dem Wert anzeigen",
+                lbl_decimals_tooltip: "Dezimalstellen"
             }
         };
 
@@ -1823,6 +1991,14 @@
             const dateSelect = document.getElementById('clockDateFormatSelect');
             if (timeSelect) timeSelect.value = clockTimeFormat;
             if (dateSelect) dateSelect.value = clockDateFormat;
+        }
+
+        // Small helper for translating one-off strings used outside the DOM (alert/confirm
+        // dialogs, dynamically-set status text) that aren't covered by the data-i18n sweep.
+        function tr(key, fallback) {
+            const lang = localStorage.getItem('dashboard_lang') || 'en';
+            const t = translations[lang] || translations.en;
+            return t[key] || fallback;
         }
 
         function changeLanguage(lang) {
@@ -1961,9 +2137,9 @@
                 localStorage.setItem('dashboard_canvas_width', canvasWidth);
                 localStorage.setItem('dashboard_canvas_height', canvasHeight);
                 scaleDashboard();
-                alert(`Resolution updated to ${canvasWidth} × ${canvasHeight}`);
+                alert(`${tr("alert_res_updated", "Resolution updated to")} ${canvasWidth} × ${canvasHeight}`);
             } else {
-                alert("Please enter valid width (min 600) and height (min 400).");
+                alert(tr("alert_invalid_resolution", "Please enter valid width (min 600) and height (min 400)."));
             }
         }
 
@@ -2136,7 +2312,7 @@
             localStorage.removeItem('remotehwinfo_persistent_sensors');
             sessionMinMax = {};
             localStorage.removeItem('remotehwinfo_session_minmax');
-            alert("Sensor cache cleared!");
+            alert(tr("alert_sensor_cache_cleared", "Sensor cache cleared!"));
             fetchAllSensorsOnce().then(() => {
                 renderSettingsDOM(false);
                 updateValues();
@@ -2163,6 +2339,13 @@
                 panel.classList.add('open');
                 const lang = localStorage.getItem('dashboard_lang') || 'en';
                 changeLanguage(lang);
+                // If the Cards tab happens to already be the active tab from a previous
+                // session, its preview column was still display:none (whole panel was closed)
+                // when sizes were last computed, so recompute now that it's actually visible.
+                const cardsTab = document.getElementById('tab-cards');
+                if (cardsTab && cardsTab.classList.contains('active')) {
+                    initCardPreviews();
+                }
             }
         }
 
@@ -2173,7 +2356,26 @@
             if (btn) btn.classList.add('active');
             const body = document.querySelector('.settings-body');
             if (body) body.scrollTop = 0;
+            if (tabId === 'tab-cards') {
+                // The Cards tab (and its preview panel) is display:none until switched to, so
+                // any size measured while it was hidden would read as 0 / the safety-floor value.
+                // Recompute now that it's actually visible and has a real, laid-out width.
+                initCardPreviews();
+            }
         }
+
+        // Keep the preview thumbnails correctly sized if the settings panel (and therefore the
+        // preview column) is resized — e.g. the browser window changes size, or the settings
+        // font-size slider changes the panel's own scale/layout.
+        let previewResizeDebounce = null;
+        window.addEventListener('resize', () => {
+            if (document.getElementById('tab-cards') && document.getElementById('tab-cards').classList.contains('active')) {
+                clearTimeout(previewResizeDebounce);
+                previewResizeDebounce = setTimeout(() => {
+                    config.forEach((card, cIndex) => updateCardPreviewSize(cIndex, card));
+                }, 150);
+            }
+        });
 
         function updateSettingsFontSize(pct) {
             const scale = pct / 100;
@@ -2413,13 +2615,13 @@
                             scaleDashboard();
                         }
                     } else { 
-                        alert("Invalid JSON file structure."); 
+                        alert(tr("alert_invalid_json", "Invalid JSON file structure.")); 
                         return;
                     }
                     saveConfig();
                     renderSettingsDOM(true);
-                    alert("Settings loaded successfully!");
-                } catch (err) { alert("Error reading file!"); }
+                    alert(tr("alert_settings_loaded", "Settings loaded successfully!"));
+                } catch (err) { alert(tr("alert_error_reading_file", "Error reading file!")); }
             };
             reader.readAsText(file);
             event.target.value = '';
@@ -2441,14 +2643,14 @@
             document.getElementById('ip-test-feedback').style.color = 'var(--accent)';
             document.getElementById('ip-test-feedback').innerText = 'Settings saved & fetching sensors...';
             fetchAllSensorsOnce().then(() => {
-                document.getElementById('ip-test-feedback').innerText = 'Sensor lists updated!';
+                document.getElementById('ip-test-feedback').innerText = tr('feedback_sensor_lists_updated', 'Sensor lists updated!');
                 renderSettingsDOM(false);
                 updateValues();
             });
         }
 
         function resetToDefaults() {
-            if(confirm("Reset to default settings?")) {
+            if(confirm(tr("confirm_reset_defaults", "Reset to default settings?"))) {
                 config = DEFAULT_CONFIG;
                 activeThemePresetKey = 'midnight';
                 customTheme = THEME_PRESETS.midnight;
@@ -3412,13 +3614,13 @@
                                 <input type="color" value="${chartColor}" onchange="updateChart(${cIndex}, ${chIndex}, 'color', this.value)" title="Choose Color">
 
                                 <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'fontSize', this.value)">
-                                    <option value="sm" ${ch.fontSize === 'sm' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}Small</option>
-                                    <option value="md" ${!ch.fontSize || ch.fontSize === 'md' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}Normal</option>
-                                    <option value="lg" ${ch.fontSize === 'lg' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}Large</option>
-                                    <option value="xl" ${ch.fontSize === 'xl' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}XL</option>
+                                    <option value="sm" ${ch.fontSize === 'sm' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_small || 'Small'}</option>
+                                    <option value="md" ${!ch.fontSize || ch.fontSize === 'md' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_normal || 'Normal'}</option>
+                                    <option value="lg" ${ch.fontSize === 'lg' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_large || 'Large'}</option>
+                                    <option value="xl" ${ch.fontSize === 'xl' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_xl || 'XL'}</option>
                                 </select>
 
-                                <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'decimals', parseInt(this.value))" title="Decimals">
+                                <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'decimals', parseInt(this.value))" title="${t.lbl_decimals_tooltip || 'Decimals'}">
                                     <option value="0" ${currentDecimals === 0 ? 'selected' : ''}>0${t.lbl_dec_suffix || ' Decimals'}</option>
                                     <option value="1" ${currentDecimals === 1 ? 'selected' : ''}>1${t.lbl_dec_suffix || ' Decimal'}</option>
                                     <option value="2" ${currentDecimals === 2 ? 'selected' : ''}>2${t.lbl_dec_suffix || ' Decimals'}</option>
@@ -3427,36 +3629,36 @@
                                 </select>
 
                                 <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'convert', this.value)">
-                                    <option value="none" ${currentConvert === 'none' ? 'selected' : ''}>No Conversion</option>
-                                    <option value="mhz_to_ghz" ${currentConvert === 'mhz_to_ghz' ? 'selected' : ''}>MHz -> GHz</option>
-                                    <option value="ghz_to_mhz" ${currentConvert === 'ghz_to_mhz' ? 'selected' : ''}>GHz -> MHz</option>
-                                    <option value="c_to_f" ${currentConvert === 'c_to_f' ? 'selected' : ''}>°C -> °F</option>
-                                    <option value="f_to_c" ${currentConvert === 'f_to_c' ? 'selected' : ''}>°F -> °C</option>
-                                    <option value="auto_speed" ${currentConvert === 'auto_speed' ? 'selected' : ''}>Auto Transfer Rate</option>
-                                    <option value="bytes_to_mb" ${currentConvert === 'bytes_to_mb' ? 'selected' : ''}>Bytes -> MB</option>
-                                    <option value="bytes_to_gb" ${currentConvert === 'bytes_to_gb' ? 'selected' : ''}>Bytes -> GB</option>
-                                    <option value="mb_to_gb" ${currentConvert === 'mb_to_gb' ? 'selected' : ''}>MB -> GB</option>
-                                    <option value="rpm" ${currentConvert === 'rpm' ? 'selected' : ''}>RPM</option>
-                                    <option value="percent" ${currentConvert === 'percent' ? 'selected' : ''}>Force %</option>
-                                    <option value="volts" ${currentConvert === 'volts' ? 'selected' : ''}>Volts (V)</option>
-                                    <option value="watts" ${currentConvert === 'watts' ? 'selected' : ''}>Watts (W)</option>
+                                    <option value="none" ${currentConvert === 'none' ? 'selected' : ''}>${t.conv_none || 'No Conversion'}</option>
+                                    <option value="mhz_to_ghz" ${currentConvert === 'mhz_to_ghz' ? 'selected' : ''}>${t.conv_mhz_ghz || 'MHz -> GHz'}</option>
+                                    <option value="ghz_to_mhz" ${currentConvert === 'ghz_to_mhz' ? 'selected' : ''}>${t.conv_ghz_mhz || 'GHz -> MHz'}</option>
+                                    <option value="c_to_f" ${currentConvert === 'c_to_f' ? 'selected' : ''}>${t.conv_c_f || '°C -> °F'}</option>
+                                    <option value="f_to_c" ${currentConvert === 'f_to_c' ? 'selected' : ''}>${t.conv_f_c || '°F -> °C'}</option>
+                                    <option value="auto_speed" ${currentConvert === 'auto_speed' ? 'selected' : ''}>${t.conv_auto_speed || 'Auto Transfer Rate'}</option>
+                                    <option value="bytes_to_mb" ${currentConvert === 'bytes_to_mb' ? 'selected' : ''}>${t.conv_bytes_mb || 'Bytes -> MB'}</option>
+                                    <option value="bytes_to_gb" ${currentConvert === 'bytes_to_gb' ? 'selected' : ''}>${t.conv_bytes_gb || 'Bytes -> GB'}</option>
+                                    <option value="mb_to_gb" ${currentConvert === 'mb_to_gb' ? 'selected' : ''}>${t.conv_mb_gb || 'MB -> GB'}</option>
+                                    <option value="rpm" ${currentConvert === 'rpm' ? 'selected' : ''}>${t.conv_rpm || 'RPM'}</option>
+                                    <option value="percent" ${currentConvert === 'percent' ? 'selected' : ''}>${t.conv_percent || 'Force %'}</option>
+                                    <option value="volts" ${currentConvert === 'volts' ? 'selected' : ''}>${t.conv_volts || 'Volts (V)'}</option>
+                                    <option value="watts" ${currentConvert === 'watts' ? 'selected' : ''}>${t.conv_watts || 'Watts (W)'}</option>
                                 </select>
 
                                 <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'fill', this.value === 'true')">
-                                    <option value="true" ${isFill ? 'selected' : ''}>Area Fill: On</option>
-                                    <option value="false" ${!isFill ? 'selected' : ''}>Area Fill: Off</option>
+                                    <option value="true" ${isFill ? 'selected' : ''}>${t.fill_on || 'Area Fill: On'}</option>
+                                    <option value="false" ${!isFill ? 'selected' : ''}>${t.fill_off || 'Area Fill: Off'}</option>
                                 </select>
 
                                 <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'lineWidth', parseInt(this.value))">
-                                    <option value="1" ${lWidth === 1 ? 'selected' : ''}>Line Width: 1px</option>
-                                    <option value="2" ${lWidth === 2 ? 'selected' : ''}>Line Width: 2px</option>
-                                    <option value="3" ${lWidth === 3 ? 'selected' : ''}>Line Width: 3px</option>
-                                    <option value="4" ${lWidth === 4 ? 'selected' : ''}>Line Width: 4px</option>
-                                    <option value="5" ${lWidth === 5 ? 'selected' : ''}>Line Width: 5px</option>
+                                    <option value="1" ${lWidth === 1 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}1px</option>
+                                    <option value="2" ${lWidth === 2 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}2px</option>
+                                    <option value="3" ${lWidth === 3 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}3px</option>
+                                    <option value="4" ${lWidth === 4 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}4px</option>
+                                    <option value="5" ${lWidth === 5 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}5px</option>
                                 </select>
                             </div>
                             <div class="config-row" style="border-top: 1px dashed var(--border); padding-top: 8px;">
-                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase;">Sensor:</span>
+                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase;">${t.lbl_sensor_colon || 'Sensor:'}</span>
                                 ${buildSensorSelect(filteredSensors, ch.sensorId, `updateChart(${cIndex}, ${chIndex}, 'sensorId', this.value)`)}
                             </div>
                             ${buildDynamicColorUI(cIndex, chIndex, ch)}
@@ -3505,13 +3707,13 @@
                                 </div>
 
                                 <select class="fixed-width-select" onchange="updateSensor(${cIndex}, ${sIndex}, 'fontSize', this.value)">
-                                    <option value="sm" ${s.fontSize === 'sm' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}Small</option>
-                                    <option value="md" ${!s.fontSize || s.fontSize === 'md' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}Normal</option>
-                                    <option value="lg" ${s.fontSize === 'lg' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}Large</option>
-                                    <option value="xl" ${s.fontSize === 'xl' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}XL</option>
+                                    <option value="sm" ${s.fontSize === 'sm' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_small || 'Small'}</option>
+                                    <option value="md" ${!s.fontSize || s.fontSize === 'md' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_normal || 'Normal'}</option>
+                                    <option value="lg" ${s.fontSize === 'lg' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_large || 'Large'}</option>
+                                    <option value="xl" ${s.fontSize === 'xl' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_xl || 'XL'}</option>
                                 </select>
 
-                                <select class="fixed-width-select" onchange="updateSensor(${cIndex}, ${sIndex}, 'decimals', parseInt(this.value))" title="Decimals">
+                                <select class="fixed-width-select" onchange="updateSensor(${cIndex}, ${sIndex}, 'decimals', parseInt(this.value))" title="${t.lbl_decimals_tooltip || 'Decimals'}">
                                     <option value="0" ${currentDecimals === 0 ? 'selected' : ''}>0${t.lbl_dec_suffix || ' Decimals'}</option>
                                     <option value="1" ${currentDecimals === 1 ? 'selected' : ''}>1${t.lbl_dec_suffix || ' Decimal'}</option>
                                     <option value="2" ${currentDecimals === 2 ? 'selected' : ''}>2${t.lbl_dec_suffix || ' Decimals'}</option>
@@ -3520,34 +3722,34 @@
                                 </select>
 
                                 <select class="fixed-width-select" onchange="updateSensor(${cIndex}, ${sIndex}, 'convert', this.value)">
-                                    <option value="none" ${currentConvert === 'none' ? 'selected' : ''}>No Conversion</option>
-                                    <option value="mhz_to_ghz" ${currentConvert === 'mhz_to_ghz' ? 'selected' : ''}>MHz -> GHz</option>
-                                    <option value="ghz_to_mhz" ${currentConvert === 'ghz_to_mhz' ? 'selected' : ''}>GHz -> MHz</option>
-                                    <option value="c_to_f" ${currentConvert === 'c_to_f' ? 'selected' : ''}>°C -> °F</option>
-                                    <option value="f_to_c" ${currentConvert === 'f_to_c' ? 'selected' : ''}>°F -> °C</option>
-                                    <option value="auto_speed" ${currentConvert === 'auto_speed' ? 'selected' : ''}>Auto Transfer Rate</option>
-                                    <option value="bytes_to_mb" ${currentConvert === 'bytes_to_mb' ? 'selected' : ''}>Bytes -> MB</option>
-                                    <option value="bytes_to_gb" ${currentConvert === 'bytes_to_gb' ? 'selected' : ''}>Bytes -> GB</option>
-                                    <option value="mb_to_gb" ${currentConvert === 'mb_to_gb' ? 'selected' : ''}>MB -> GB</option>
-                                    <option value="rpm" ${currentConvert === 'rpm' ? 'selected' : ''}>RPM</option>
-                                    <option value="percent" ${currentConvert === 'percent' ? 'selected' : ''}>Force %</option>
-                                    <option value="volts" ${currentConvert === 'volts' ? 'selected' : ''}>Volts (V)</option>
-                                    <option value="watts" ${currentConvert === 'watts' ? 'selected' : ''}>Watts (W)</option>
+                                    <option value="none" ${currentConvert === 'none' ? 'selected' : ''}>${t.conv_none || 'No Conversion'}</option>
+                                    <option value="mhz_to_ghz" ${currentConvert === 'mhz_to_ghz' ? 'selected' : ''}>${t.conv_mhz_ghz || 'MHz -> GHz'}</option>
+                                    <option value="ghz_to_mhz" ${currentConvert === 'ghz_to_mhz' ? 'selected' : ''}>${t.conv_ghz_mhz || 'GHz -> MHz'}</option>
+                                    <option value="c_to_f" ${currentConvert === 'c_to_f' ? 'selected' : ''}>${t.conv_c_f || '°C -> °F'}</option>
+                                    <option value="f_to_c" ${currentConvert === 'f_to_c' ? 'selected' : ''}>${t.conv_f_c || '°F -> °C'}</option>
+                                    <option value="auto_speed" ${currentConvert === 'auto_speed' ? 'selected' : ''}>${t.conv_auto_speed || 'Auto Transfer Rate'}</option>
+                                    <option value="bytes_to_mb" ${currentConvert === 'bytes_to_mb' ? 'selected' : ''}>${t.conv_bytes_mb || 'Bytes -> MB'}</option>
+                                    <option value="bytes_to_gb" ${currentConvert === 'bytes_to_gb' ? 'selected' : ''}>${t.conv_bytes_gb || 'Bytes -> GB'}</option>
+                                    <option value="mb_to_gb" ${currentConvert === 'mb_to_gb' ? 'selected' : ''}>${t.conv_mb_gb || 'MB -> GB'}</option>
+                                    <option value="rpm" ${currentConvert === 'rpm' ? 'selected' : ''}>${t.conv_rpm || 'RPM'}</option>
+                                    <option value="percent" ${currentConvert === 'percent' ? 'selected' : ''}>${t.conv_percent || 'Force %'}</option>
+                                    <option value="volts" ${currentConvert === 'volts' ? 'selected' : ''}>${t.conv_volts || 'Volts (V)'}</option>
+                                    <option value="watts" ${currentConvert === 'watts' ? 'selected' : ''}>${t.conv_watts || 'Watts (W)'}</option>
                                 </select>
 
                                 <input type="number" class="small-input" placeholder="${t.lbl_alert_placeholder || 'Alert > value'}" value="${s.alertThreshold !== undefined ? s.alertThreshold : ''}" onchange="updateSensor(${cIndex}, ${sIndex}, 'alertThreshold', this.value !== '' ? parseFloat(this.value) : undefined)">
 
-                                <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-size:0.8rem; color:var(--muted); white-space:nowrap;" title="Show sparkline trend next to value">
+                                <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-size:0.8rem; color:var(--muted); white-space:nowrap;" title="${t.sparkline_tooltip || 'Show sparkline trend next to value'}">
                                     <input type="checkbox" ${s.sparkline ? 'checked' : ''} onchange="updateSensor(${cIndex}, ${sIndex}, 'sparkline', this.checked); renderDashboardDOM();" style="accent-color:var(--accent);">
-                                    📈 Sparkline
+                                    📈 ${t.sparkline_label || 'Sparkline'}
                                 </label>
                             </div>
                             
                             <div class="config-row" style="border-top: 1px dashed var(--border); padding-top: 8px;">
-                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase;">Sensor:</span>
+                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase;">${t.lbl_sensor_colon || 'Sensor:'}</span>
                                 ${buildSensorSelect(filteredSensors, s.sensorId, `updateSensor(${cIndex}, ${sIndex}, 'sensorId', this.value)`)}
                                 
-                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-left: 10px;">Placement:</span>
+                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-left: 10px;">${t.lbl_placement_colon || 'Placement:'}</span>
                                 <select onchange="updateSensor(${cIndex}, ${sIndex}, 'chartId', this.value)" style="flex: 0 0 200px;">
                                     <option value="">${t.placement_full || 'Placement: Full Card'}</option>
                                     ${(card.charts || []).map(ch => `<option value="${ch.id}" ${s.chartId === ch.id ? 'selected' : ''}>${t.under_chart || 'Under: '}${ch.title || 'Chart'}</option>`).join('')}
@@ -3681,6 +3883,64 @@
             `;
         }
 
+        // Sizes the preview thumbnail to match the card's actual colSpan/rowSpan aspect ratio
+        // (mirroring the same grid math scaleDashboard() uses), then scales the whole thing down
+        // to fit inside a max box that's measured from the actual panel/viewport at the time —
+        // this is what "contain" does for images, applied to a proportionally-sized div, so a
+        // wide 12-col card renders as a short wide box and a narrow tall card renders as a tall
+        // narrow box, and the preview grows to fill the available column instead of staying tiny.
+        const PREVIEW_FALLBACK_W = 420; // only used if the panel can't be measured at all
+        function updateCardPreviewSize(cIndex, card) {
+            const wrap = document.getElementById(`preview-wrap-${cIndex}`);
+            if (!wrap) return;
+            const innerCard = wrap.querySelector('.card');
+
+            // The preview column is fluid (~half the settings width) instead of a fixed px
+            // value, so measure how much room the panel actually has rather than assuming a
+            // constant. If the panel is currently hidden (e.g. a different settings tab is
+            // active) clientWidth reads as 0 — fall back to a sane default rather than the
+            // dangerously-small 200px floor in that case (callers also re-run this once the
+            // panel becomes visible, via switchSettingsTab()/toggleSettings()).
+            const panel = wrap.closest('.card-preview-panel');
+            const measuredW = panel ? panel.clientWidth - 32 : 0;
+            const maxW = Math.min(measuredW > 100 ? measuredW : PREVIEW_FALLBACK_W, 900);
+            // Height isn't limited to a small fixed value anymore either — use most of the
+            // viewport height so the preview can actually grow as tall as the card needs,
+            // since .card-preview-panel is sticky and only ever shows one screenful at a time.
+            const maxH = Math.min(window.innerHeight * 0.6, 760);
+
+            const cols = Math.max(8, Math.round(12 * (canvasWidth / 1920)));
+            const rowHeight = Math.max(40, Math.round(50 * (canvasHeight / 1200)));
+            const gap = 16;
+            const usableWidth = canvasWidth - 48; // #dashboard-container has 24px padding each side
+
+            const colWidth = (usableWidth - (cols - 1) * gap) / cols;
+            const colSpan = Math.min(card.colSpan || 6, cols);
+            const cardWidthPx = colSpan * colWidth + (colSpan - 1) * gap;
+
+            const rowSpan = card.rowSpan || 6;
+            const cardHeightPx = rowSpan * rowHeight + (Math.max(1, rowSpan) - 1) * (gap * 0.32);
+            // (rows are packed much tighter than columns visually since grid-auto-rows is small,
+            // so we approximate row gap contribution lightly rather than full 16px per row)
+
+            let scale = Math.min(maxW / cardWidthPx, maxH / cardHeightPx);
+            scale = Math.min(scale, 2.2); // don't blow up tiny 1-2 column cards into blurry giants
+            scale = Math.max(scale, 0.08); // safety floor
+
+            // The outer wrap gets the small, final displayed footprint...
+            wrap.style.width = `${Math.round(cardWidthPx * scale)}px`;
+            wrap.style.height = `${Math.round(cardHeightPx * scale)}px`;
+
+            // ...while the card inside it renders at its REAL, full size and is visually shrunk
+            // with a transform. This scales fonts/padding/charts all together in proportion,
+            // instead of clipping full-size content into a too-small box.
+            if (innerCard) {
+                innerCard.style.width = `${Math.round(cardWidthPx)}px`;
+                innerCard.style.height = `${Math.round(cardHeightPx)}px`;
+                innerCard.style.transform = `scale(${scale})`;
+            }
+        }
+
         function initCardPreviews() {
             stopCardPreviews();
             config.forEach((card, cIndex) => {
@@ -3688,6 +3948,7 @@
                 const wrap = document.getElementById(`preview-wrap-${cIndex}`);
                 if (!wrap) return; // collapsed card preview isn't in the DOM tree area currently shown — skip
                 wrap.innerHTML = buildCardPreviewHtml(card, cIndex);
+                updateCardPreviewSize(cIndex, card);
 
                 const pv = (id) => `pv${cIndex}-${id}`;
                 const state = { metrics: {}, charts: {} };
@@ -3779,7 +4040,7 @@
         }
 
         function removeCard(cIndex) {
-            if (confirm("Remove this card?")) {
+            if (confirm(tr("confirm_remove_card", "Remove this card?"))) {
                 config.splice(cIndex, 1);
                 saveConfig();
                 renderSettingsDOM(false);
