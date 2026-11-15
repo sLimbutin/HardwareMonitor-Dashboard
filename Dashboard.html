@@ -77,40 +77,184 @@
         h1 { font-size: 1.6rem; color: var(--text); letter-spacing: -0.5px; font-weight: 800; font-family: var(--base-font); }
         h1 span { color: var(--accent); }
 
-        .header-clock {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: 0.5px;
-            background: var(--card-sub);
-            padding: 6px 14px;
-            border-radius: 8px;
+        /* ── Header ─────────────────────────────────────────────────────────── */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            padding: 0 20px;
+            background: var(--card);
             border: 1px solid var(--border);
-            font-family: var(--mono-font);
+            border-radius: 14px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+            gap: 16px;
         }
 
-        .battery-badge {
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            font-family: var(--base-font);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .header-title span { color: var(--accent); }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Shared pill style for all header elements */
+        .header-pill {
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text);
-            background: var(--card-sub);
-            padding: 6px 12px;
+            padding: 0 14px;
+            height: 38px;
             border-radius: 8px;
             border: 1px solid var(--border);
+            background: var(--card-sub);
             font-family: var(--mono-font);
+            font-size: 0.9rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: default;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        /* Clock — larger text, accent color */
+        .header-clock {
+            color: var(--accent);
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Battery */
+        .battery-badge {
+            color: var(--text);
             transition: color 0.3s, border-color 0.3s;
         }
-        .battery-badge.battery-low {
-            color: #f43f5e;
+        .battery-badge.battery-low  { color: #f43f5e; border-color: #f43f5e; }
+        .battery-badge.battery-charging { color: #22c55e; }
+
+        /* Status pill — clickable, shows popup */
+        .status-pill {
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+        .status-pill:hover { border-color: var(--accent); }
+        .status-pill.ok   {
+            color: var(--success);
+            border-color: rgba(16,185,129,0.5);
+            background: linear-gradient(90deg, rgba(16,185,129,0.08), rgba(16,185,129,0.22), rgba(16,185,129,0.08));
+            background-size: 200% 100%;
+            animation: connOkPulse 3s ease-in-out infinite;
+        }
+        .status-pill.warn {
+            color: var(--warn);
+            border-color: rgba(245,158,11,0.5);
+            background: linear-gradient(90deg, rgba(245,158,11,0.08), rgba(245,158,11,0.22), rgba(245,158,11,0.08));
+            background-size: 200% 100%;
+            animation: connWarnPulse 3s ease-in-out infinite;
+        }
+        @keyframes connOkPulse {
+            0%   { background-position: 100% 0; }
+            50%  { background-position: 0% 0; }
+            100% { background-position: 100% 0; }
+        }
+        @keyframes connWarnPulse {
+            0%   { background-position: 100% 0; }
+            50%  { background-position: 0% 0; }
+            100% { background-position: 100% 0; }
+        }
+        .status-pill.err  { color: var(--danger);  border-color: rgba(244,63,94,0.35);  background: rgba(244,63,94,0.08); }
+
+        /* Connection lost — gradient pulse, replaces status pill */
+        .status-pill.lost {
+            background: linear-gradient(90deg, rgba(244,63,94,0.15), rgba(244,63,94,0.45), rgba(244,63,94,0.15));
+            background-size: 200% 100%;
             border-color: #f43f5e;
+            color: #ff7090;
+            animation: connLostPulse 1.8s ease-in-out infinite;
+            cursor: pointer;
         }
-        .battery-badge.battery-charging {
-            color: #22c55e;
+        @keyframes connLostPulse {
+            0%   { background-position: 100% 0; }
+            50%  { background-position: 0% 0; }
+            100% { background-position: 100% 0; }
         }
-        #battery-icon { font-size: 1.15rem; line-height: 1; }
+
+        /* Status popup */
+        .status-popup {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            min-width: 200px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            z-index: 500;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .status-popup.open { display: flex; }
+        .status-popup-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 0.85rem;
+            font-family: var(--mono-font);
+            font-weight: 700;
+        }
+        .status-popup-label { color: var(--muted); }
+        .status-popup-val { display: flex; align-items: center; gap: 5px; }
+        .status-popup-val.ok   { color: var(--success); }
+        .status-popup-val.warn { color: var(--warn); }
+        .status-popup-val.err  { color: var(--danger); }
+        .status-popup-divider  { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
+        .status-popup-dismiss  {
+            margin-top: 4px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-align: center;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--card-sub);
+            font-family: var(--base-font);
+            font-weight: 600;
+        }
+        .status-popup-dismiss:hover { color: var(--text); border-color: var(--accent); }
+
+        /* Icon-only action buttons */
+        .header-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-sub);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .header-btn:hover { border-color: var(--accent); background: var(--card); }
+        .header-btn.refresh:active { transform: rotate(180deg); }
 
         .lang-select, select, input, button {
             font-family: var(--base-font);
@@ -163,23 +307,6 @@
         }
         .btn-small:hover { background: var(--border); border-color: var(--border-glow); }
 
-        .btn-icon {
-            background: var(--card-sub);
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 8px 14px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--base-font);
-        }
-        .btn-icon:hover { border-color: var(--accent); background: var(--card); }
 
         .grid { 
             display: grid; 
@@ -913,25 +1040,6 @@
         }
         .btn-small:hover { background: var(--border); border-color: var(--border-glow); }
 
-        .btn-icon {
-            background: var(--card-sub);
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 10px 16px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--base-font);
-            min-height: 44px;
-        }
-        .btn-icon:hover { border-color: var(--accent); background: var(--card); }
-            color: var(--muted);
             font-weight: 700;
             text-transform: uppercase;
             font-family: var(--base-font);
@@ -975,41 +1083,26 @@
         .sensor-dd-option.selected { color: var(--accent); font-weight: 600; }
         .sensor-dd-option.hidden { display: none; }
         .sensor-dd-group.hidden { display: none; }
-        /* Connection lost overlay */
-        #connection-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: grayscale(80%) brightness(0.6);
-            z-index: 8000;
-            pointer-events: none;
-        }
-        #connection-banner {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            background: #c0392b;
-            color: #fff;
-            text-align: center;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            z-index: 8001;
-            pointer-events: none;
-            animation: bannerPulse 2s ease-in-out infinite;
-        }
-        @keyframes bannerPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        body.connection-lost #connection-overlay,
-        body.connection-lost #connection-banner { display: block; }
         /* Sparkline */
-        .sparkline-canvas { display: inline-block; vertical-align: middle; margin-left: 8px; opacity: 0.85; }
+        /* Modern chart & sensor item controls */
+        .source-pills { display:inline-flex; border-radius:8px; overflow:hidden; border:1px solid var(--border); flex-shrink:0; }
+        .source-pill { padding:7px 13px; font-size:0.8rem; font-weight:700; cursor:pointer; background:var(--card); color:var(--muted); border:none; transition:all 0.15s; font-family:var(--base-font); }
+        .source-pill.active { background:var(--accent); color:#000; }
+        .source-pill+.source-pill { border-left:1px solid var(--border); }
 
-        .status { padding: 8px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); white-space: nowrap; }
+        .ctrl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; width:100%; }
+        .ctrl-field { display:flex; flex-direction:column; gap:4px; }
+        .ctrl-field label { font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); }
+        .ctrl-field select, .ctrl-field input[type="number"], .ctrl-field input[type="text"] { width:100%; }
+
+        .sensor-row { display:flex; gap:8px; align-items:center; width:100%; }
+        .sensor-row .sensor-dd { flex:1; min-width:0; }
+
+        .delete-btn { width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(244,63,94,0.1); border:1px solid rgba(244,63,94,0.3); border-radius:8px; cursor:pointer; color:var(--danger); font-size:1rem; transition:all 0.15s; flex-shrink:0; }
+        .delete-btn:hover { background:rgba(244,63,94,0.3); }
+
+        .sparkline-canvas { display:inline-block; vertical-align:middle; margin-left:8px; opacity:0.85; }
+
         .status.warn { background: rgba(245, 158, 11, 0.1); color: var(--warn); border: 1px solid rgba(245, 158, 11, 0.2); }
         .status.err { background: rgba(244, 63, 94, 0.1); color: var(--danger); border: 1px solid rgba(244, 63, 94, 0.2); }
 
@@ -1036,22 +1129,80 @@
         /* Exceptions: icons and color inputs don't need scaling */
         #settings-panel input[type="color"],
         #settings-panel input[type="range"] { font-size: inherit !important; }
+        /* Screensaver: black overlay with a dim centered clock, above everything */
+        #screensaver {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #000;
+            z-index: 100000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            -webkit-user-select: none; user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #screensaver.active { display: flex; }
+        #screensaver-time {
+            font-family: var(--mono-font);
+            font-size: 16vmin;
+            font-weight: 700;
+            line-height: 1.1;
+            color: rgba(255, 255, 255, 0.22);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+        #screensaver-date {
+            font-family: var(--mono-font);
+            font-size: 4.5vmin;
+            font-weight: 600;
+            margin-top: 1.5vmin;
+            color: rgba(255, 255, 255, 0.16);
+            white-space: nowrap;
+        }
+
     </style>
 </head>
 <body>
-    <div id="connection-overlay"></div>
-    <div id="connection-banner">⚠ CONNECTION LOST — Attempting to reconnect...</div>
+
+    <div id="screensaver" onclick="dismissScreensaver()">
+        <div id="screensaver-time">00:00</div>
+        <div id="screensaver-date"></div>
+    </div>
 
     <div id="dashboard-container">
         <header>
-            <h1 data-i18n="main_title">Hardware <span>Monitor</span></h1>
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <span id="battery-indicator" class="battery-badge" style="display:none;" title="">
+            <div class="header-title">Hardware <span>Monitor</span></div>
+            <div class="header-right">
+                <!-- Battery (hidden when not available) -->
+                <span id="battery-indicator" class="header-pill battery-badge" style="display:none;" title="">
                     <span id="battery-icon">🔋</span><span id="battery-percent">--%</span>
                 </span>
-                <span id="connection-status" class="status err" data-i18n="status_connecting">Connecting...</span>
-                <div id="header-clock" class="header-clock">00:00 | 01.01.2026</div>
-                <button class="btn-icon" onclick="toggleSettings()" data-i18n="btn_settings">⚙️ Settings</button>
+
+                <!-- Status pill — always visible, clickable for popup -->
+                <div class="header-pill status-pill ok" id="status-pill" onclick="toggleStatusPopup(event)">
+                    <span id="status-pill-text">Connecting...</span>
+                    <div class="status-popup" id="status-popup">
+                        <div class="status-popup-row">
+                            <span class="status-popup-label">HWiNFO</span>
+                            <span class="status-popup-val err" id="popup-hw">⬤ —</span>
+                        </div>
+                        <div class="status-popup-row">
+                            <span class="status-popup-label">LHM / OHM</span>
+                            <span class="status-popup-val err" id="popup-lhm">⬤ —</span>
+                        </div>
+                        <hr class="status-popup-divider">
+                        <button class="status-popup-dismiss" onclick="dismissConnectionOverlay(); toggleStatusPopup(event)">✕ Dismiss alert</button>
+                    </div>
+                </div>
+
+                <!-- Clock -->
+                <div id="header-clock" class="header-pill header-clock">00:00 | 01.01.2026</div>
+
+                <!-- Action buttons -->
+                <button class="header-btn refresh" onclick="location.reload()" title="Reload page">🔄</button>
+                <button class="header-btn" onclick="toggleSettings()" title="Settings">⚙️</button>
             </div>
         </header>
 
@@ -1284,17 +1435,42 @@
             <h3 style="color: var(--accent); margin-bottom: 12px; font-size: 1rem; font-weight: 700;" data-i18n="conn_section_title">🌐 Connection Settings & Canvas Resolution</h3>
             <div class="input-group" style="margin-top: 10px;">
                 <strong style="color: var(--text); min-width: 140px; font-size: 0.9rem;" data-i18n="label_hwinfo_ip">HWiNFO IP:Port:</strong>
-                <input type="text" id="hwinfo-ip-input" placeholder="e.g. 127.0.0.1:60000" style="width: 260px; min-width: 200px;">
+                <input type="text" id="hwinfo-ip-input" placeholder="e.g. 127.0.0.1:60000" style="width: 260px; min-width: 200px;" onblur="saveAndTestIp()">
                 <strong style="color: var(--text); margin-left: 20px; min-width: 130px; font-size: 0.9rem;" data-i18n="label_lhm_ip">LHM / OHM IP:Port:</strong>
-                <input type="text" id="lhm-ip-input" placeholder="e.g. 127.0.0.1:8085" style="width: 260px; min-width: 200px;">
+                <input type="text" id="lhm-ip-input" placeholder="e.g. 127.0.0.1:8085" style="width: 260px; min-width: 200px;" onblur="saveAndTestIp()">
             </div>
             <div class="input-group" style="margin-top: 14px;">
                 <strong style="color: var(--text); min-width: 140px; font-size: 0.9rem;" data-i18n="label_refresh_rate">Refresh Rate (ms):</strong>
-                <input type="number" id="refresh-rate-input" placeholder="e.g. 4000" style="width: 260px; min-width: 200px;" min="1000" step="500">
+                <input type="number" id="refresh-rate-input" placeholder="e.g. 4000" style="width: 200px; min-width: 160px;" min="1000" step="500">
+                <strong style="color: var(--text); margin-left: 20px; min-width: 120px; font-size: 0.9rem;">Chart Points:</strong>
+                <input type="number" id="chart-points-input" placeholder="e.g. 30" style="width: 120px;" min="5" max="300" step="5">
+                <strong style="color: var(--text); margin-left: 20px; min-width: 100px; font-size: 0.9rem;">Smoothness:</strong>
+                <select id="chart-smoothness-input" style="width: 160px;">
+                    <option value="0">None (sharp)</option>
+                    <option value="0.2">Low</option>
+                    <option value="0.4" selected>Medium</option>
+                    <option value="0.6">High</option>
+                    <option value="0.8">Very High</option>
+                </select>
                 <button class="btn" onclick="saveAndTestIp()" style="margin-left: 20px;" data-i18n="btn_save_test">Save & Test</button>
                 <button class="btn btn-danger" onclick="clearSensorCache()" style="margin-left: 10px;" data-i18n="btn_clear_cache">🧹 Clear Sensor Cache</button>
             </div>
             <p id="ip-test-feedback" style="font-size: 0.85rem; margin-top: 8px; color: var(--muted);"></p>
+
+            <div style="margin-top: 20px; border-top: 1px dashed var(--border); padding-top: 16px;">
+                <h4 style="color: var(--accent); margin-bottom: 10px; font-size: 0.9rem; font-weight: 700;" data-i18n="screensaver_section_title">🌙 Screensaver</h4>
+                <div class="input-group">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.9rem; color:var(--text);">
+                        <input type="checkbox" id="screensaver-enabled-input" onchange="saveScreensaverSettings()" style="accent-color: var(--accent); width:18px; height:18px;">
+                        <span data-i18n="screensaver_enable">Show screensaver when both connections are lost</span>
+                    </label>
+                </div>
+                <div class="input-group">
+                    <strong style="color: var(--text); min-width: 140px; font-size: 0.9rem;" data-i18n="screensaver_delay_label">Activate after (min):</strong>
+                    <input type="number" id="screensaver-delay-input" min="1" max="120" step="1" style="width: 120px;" onchange="saveScreensaverSettings()">
+                    <button class="btn-small" onclick="previewScreensaver()" data-i18n="screensaver_preview">👁 Preview</button>
+                </div>
+            </div>
 
             <div style="margin-top: 20px; border-top: 1px dashed var(--border); padding-top: 16px;">
                 <h4 style="color: var(--accent); margin-bottom: 10px; font-size: 0.9rem; font-weight: 700;" data-i18n="res_section_title">🖥️ Canvas Resolution Preset & Custom Scale</h4>
@@ -1329,11 +1505,11 @@
         </div> <!-- end tab-io -->
 
         <div id="tab-cards" class="settings-tab-content">
-        <div id="settings-cards-list"></div>
-        <div class="cards-tab-footer">
-            <button class="btn" onclick="addNewCard()" data-i18n="btn_add_card">+ Add New Card</button>
-            <button class="btn btn-danger" onclick="resetToDefaults()" data-i18n="btn_reset">Reset to Defaults</button>
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:16px; padding:12px 16px; background:var(--card); border:1px solid var(--border); border-radius:12px; position:sticky; top:0; z-index:10;">
+            <button class="btn" onclick="addNewCard()" data-i18n="btn_add_card" style="flex:1;">+ Add New Card</button>
+            <button class="btn btn-danger" onclick="resetToDefaults()" data-i18n="btn_reset">↺ Reset</button>
         </div>
+        <div id="settings-cards-list"></div>
         </div> <!-- end tab-cards -->
 
         </div> <!-- end settings-body -->
@@ -1344,11 +1520,6 @@
             en: {
                 meta_title: "Hardware Monitor Dashboard",
                 main_title: "Hardware <span>Monitor</span>",
-                status_connecting: "Connecting...",
-                status_ok: "HWiNFO OK | LHM/OHM OK",
-                status_hw_err: "HWiNFO OK | LHM/OHM disconnected",
-                status_lhm_err: "HWiNFO disconnected | LHM/OHM OK",
-                status_all_err: "Connection lost!",
                 btn_settings: "⚙️ Settings",
                 settings_title: "Settings & Layout",
                 settings_subtitle: "Manage canvas resolution, metrics, fonts, custom themes & presets, threshold alerts, cards, and export/import configs.",
@@ -1475,16 +1646,22 @@
                 lbl_placement_colon: "Placement:",
                 sparkline_label: "Sparkline",
                 sparkline_tooltip: "Show sparkline trend next to value",
-                lbl_decimals_tooltip: "Decimals"
+                lbl_decimals_tooltip: "Decimals",
+                status_connected: "Connected",
+                status_hw_only: "HWiNFO Connected",
+                status_lhm_only: "LHM/OHM Connected",
+                status_connecting: "Connecting...",
+                status_lost: "⚠ CONNECTION LOST",
+                popup_connected: "⬤ Connected",
+                popup_disconnected: "⬤ Disconnected",
+                screensaver_section_title: "🌙 Screensaver",
+                screensaver_enable: "Show screensaver when both connections are lost",
+                screensaver_delay_label: "Activate after (min):",
+                screensaver_preview: "👁 Preview"
             },
             fi: {
                 meta_title: "Hardware Monitor Dashboard",
                 main_title: "Laitteiston <span>Valvonta</span>",
-                status_connecting: "Yhdistetään...",
-                status_ok: "HWiNFO OK | LHM/OHM OK",
-                status_hw_err: "HWiNFO OK | LHM/OHM katkesi",
-                status_lhm_err: "HWiNFO katkesi | LHM/OHM OK",
-                status_all_err: "Yhteys katkennut!",
                 btn_settings: "⚙️ Asetukset",
                 settings_title: "Asetukset & Asettelu",
                 settings_subtitle: "Hallitse resoluutiota, mittareita, fontteja, teemoja ja presettejä, hälytysrajoja, kortteja sekä tuonti/vienti asetuksia.",
@@ -1611,16 +1788,22 @@
                 lbl_placement_colon: "Sijoittelu:",
                 sparkline_label: "Trendiviiva",
                 sparkline_tooltip: "Näytä pieni trendikäyrä arvon vieressä",
-                lbl_decimals_tooltip: "Desimaalit"
+                lbl_decimals_tooltip: "Desimaalit",
+                status_connected: "Yhdistetty",
+                status_hw_only: "HWiNFO Yhdistetty",
+                status_lhm_only: "LHM/OHM Yhdistetty",
+                status_connecting: "Yhdistetään...",
+                status_lost: "⚠ YHTEYS KATKENNUT",
+                popup_connected: "⬤ Yhdistetty",
+                popup_disconnected: "⬤ Ei yhteyttä",
+                screensaver_section_title: "🌙 Näytönsäästäjä",
+                screensaver_enable: "Näytä näytönsäästäjä, kun yhteys molempiin on katkennut",
+                screensaver_delay_label: "Aktivoituu (min) kuluttua:",
+                screensaver_preview: "👁 Esikatselu"
             },
             sv: {
                 meta_title: "Hardware Monitor Dashboard",
                 main_title: "Hårdvaru<span>övervakare</span>",
-                status_connecting: "Ansluter...",
-                status_ok: "HWiNFO OK | LHM/OHM OK",
-                status_hw_err: "HWiNFO OK | LHM/OHM bröts",
-                status_lhm_err: "HWiNFO bröts | LHM/OHM OK",
-                status_all_err: "Anslutningen bröts!",
                 btn_settings: "⚙️ Inställningar",
                 settings_title: "Inställningar & Layout",
                 settings_subtitle: "Hantera upplösning, mätare, typsnitt, teman & förinställningar, larmgränser, kort och export/import.",
@@ -1747,16 +1930,22 @@
                 lbl_placement_colon: "Placering:",
                 sparkline_label: "Trendlinje",
                 sparkline_tooltip: "Visa en liten trendlinje bredvid värdet",
-                lbl_decimals_tooltip: "Decimaler"
+                lbl_decimals_tooltip: "Decimaler",
+                status_connected: "Ansluten",
+                status_hw_only: "HWiNFO Ansluten",
+                status_lhm_only: "LHM/OHM Ansluten",
+                status_connecting: "Ansluter...",
+                status_lost: "⚠ ANSLUTNING FÖRLORAD",
+                popup_connected: "⬤ Ansluten",
+                popup_disconnected: "⬤ Frånkopplad",
+                screensaver_section_title: "🌙 Skärmsläckare",
+                screensaver_enable: "Visa skärmsläckare när båda anslutningarna har förlorats",
+                screensaver_delay_label: "Aktiveras efter (min):",
+                screensaver_preview: "👁 Förhandsgranska"
             },
             de: {
                 meta_title: "Hardware Monitor Dashboard",
                 main_title: "Hardware-<span>Monitor</span>",
-                status_connecting: "Verbindung wird hergestellt...",
-                status_ok: "HWiNFO OK | LHM/OHM OK",
-                status_hw_err: "HWiNFO OK | LHM/OHM getrennt",
-                status_lhm_err: "HWiNFO getrennt | LHM/OHM OK",
-                status_all_err: "Verbindung verloren!",
                 btn_settings: "⚙️ Einstellungen",
                 settings_title: "Einstellungen & Layout",
                 settings_subtitle: "Auflösung, Metriken, Schriftarten, Themes & Vorlagen, Schwellenwerte, Karten und Export/Import verwalten.",
@@ -1883,7 +2072,18 @@
                 lbl_placement_colon: "Platzierung:",
                 sparkline_label: "Sparkline",
                 sparkline_tooltip: "Kleine Trendlinie neben dem Wert anzeigen",
-                lbl_decimals_tooltip: "Dezimalstellen"
+                lbl_decimals_tooltip: "Dezimalstellen",
+                status_connected: "Verbunden",
+                status_hw_only: "HWiNFO Verbunden",
+                status_lhm_only: "LHM/OHM Verbunden",
+                status_connecting: "Verbinde...",
+                status_lost: "⚠ VERBINDUNG UNTERBROCHEN",
+                popup_connected: "⬤ Verbunden",
+                popup_disconnected: "⬤ Getrennt",
+                screensaver_section_title: "🌙 Bildschirmschoner",
+                screensaver_enable: "Bildschirmschoner anzeigen, wenn beide Verbindungen verloren sind",
+                screensaver_delay_label: "Aktivieren nach (Min.):",
+                screensaver_preview: "👁 Vorschau"
             }
         };
 
@@ -1937,6 +2137,110 @@
         let clockTimeFormat = localStorage.getItem('clock_time_format') || '24';
         let clockDateFormat = localStorage.getItem('clock_date_format') || 'dmy_dot';
 
+        // ── Screensaver ─────────────────────────────────────────────────────────────
+        // Shown once BOTH HWiNFO and LHM/OHM have been unreachable for N minutes.
+        // Hidden as soon as either source answers again. A tap dismisses it and re-arms the timer.
+        let screensaverEnabled = localStorage.getItem('screensaver_enabled') !== 'false';
+        let screensaverDelayMin = parseFloat(localStorage.getItem('screensaver_delay_min')) || 10;
+        let bothLostSince = null;          // time both sources first failed; null while any is reachable
+        let screensaverDismissedAt = 0;    // last tap / settings-closed time (re-arms the timer)
+        let screensaverPreviewing = false; // manual preview from settings, ignores connection state
+
+        // Clock size follows the screen resolution but is kept inside sane bounds, and is shrunk
+        // further if the rendered text would not fit (e.g. long 12 h formats on a narrow screen).
+        // Tweak these constants to taste.
+        const SS_TIME_MIN_PX = 48;       // never smaller than this (unless it would overflow)
+        const SS_TIME_MAX_PX = 280;      // never larger than this, however big the screen
+        const SS_VMIN_RATIO = 0.16;      // base size = 16 % of the shorter screen side
+        const SS_MAX_WIDTH_RATIO = 0.88; // text may use at most 88 % of the screen width
+        const SS_DATE_RATIO = 0.28;      // date size relative to the time
+        let screensaverFitKey = '';
+
+        function fitScreensaverClock() {
+            const timeEl = document.getElementById('screensaver-time');
+            const dateEl = document.getElementById('screensaver-date');
+            if (!timeEl || !dateEl) return;
+            const vw = window.innerWidth || document.documentElement.clientWidth || 0;
+            const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+            if (!vw || !vh) return;
+            const maxW = vw * SS_MAX_WIDTH_RATIO;
+
+            let timePx = Math.min(SS_TIME_MAX_PX, Math.max(SS_TIME_MIN_PX, Math.min(vw, vh) * SS_VMIN_RATIO));
+            timeEl.style.fontSize = timePx + 'px';
+            const tw = timeEl.offsetWidth;                 // 0 while hidden -> skip the width check
+            if (tw > maxW) { timePx = Math.max(16, timePx * maxW / tw); timeEl.style.fontSize = timePx + 'px'; }
+
+            let datePx = Math.max(14, timePx * SS_DATE_RATIO);
+            dateEl.style.fontSize = datePx + 'px';
+            const dw = dateEl.offsetWidth;
+            if (dw > maxW) { datePx = Math.max(10, datePx * maxW / dw); dateEl.style.fontSize = datePx + 'px'; }
+        }
+
+        // Re-fit immediately on resize / rotation while the screensaver is showing
+        window.addEventListener('resize', () => {
+            screensaverFitKey = '';
+            const el = document.getElementById('screensaver');
+            if (el && el.classList.contains('active')) updateClock();
+        });
+
+        function showScreensaver() {
+            const el = document.getElementById('screensaver');
+            if (!el) return;
+            el.classList.add('active');
+            screensaverFitKey = '';
+            updateClock(); // fill in the time right away
+        }
+
+        function hideScreensaver() {
+            const el = document.getElementById('screensaver');
+            if (el) el.classList.remove('active');
+        }
+
+        function dismissScreensaver() {
+            screensaverPreviewing = false;
+            screensaverDismissedAt = Date.now();
+            hideScreensaver();
+        }
+
+        function previewScreensaver() {
+            const panel = document.getElementById('settings-panel');
+            if (panel && panel.classList.contains('open')) toggleSettings();
+            screensaverPreviewing = true;
+            showScreensaver();
+        }
+
+        function saveScreensaverSettings() {
+            const en = document.getElementById('screensaver-enabled-input');
+            const mins = document.getElementById('screensaver-delay-input');
+            if (en) {
+                screensaverEnabled = en.checked;
+                localStorage.setItem('screensaver_enabled', screensaverEnabled ? 'true' : 'false');
+            }
+            if (mins) {
+                let v = parseInt(mins.value, 10);
+                if (isNaN(v)) v = 10;
+                v = Math.min(120, Math.max(1, v));
+                screensaverDelayMin = v;
+                mins.value = v;
+                localStorage.setItem('screensaver_delay_min', v);
+            }
+        }
+
+        // Called once per second from updateClock()
+        function screensaverTick() {
+            const el = document.getElementById('screensaver');
+            if (!el || screensaverPreviewing) return;
+            const active = el.classList.contains('active');
+            if (!screensaverEnabled || bothLostSince === null) {
+                if (active) hideScreensaver();
+                return;
+            }
+            if (active) return;
+            if (document.body.classList.contains('settings-open')) return; // user is configuring
+            const armedAt = Math.max(bothLostSince, screensaverDismissedAt);
+            if (Date.now() - armedAt >= screensaverDelayMin * 60000) showScreensaver();
+        }
+
         function updateClock() {
             const now = new Date();
             let hours24 = now.getHours();
@@ -1971,6 +2275,18 @@
             if (clockEl) {
                 clockEl.innerText = dateStr ? `${timeStr} | ${dateStr}` : timeStr;
             }
+
+            const ssEl = document.getElementById('screensaver');
+            if (ssEl && ssEl.classList.contains('active')) {
+                const tEl = document.getElementById('screensaver-time');
+                const dEl = document.getElementById('screensaver-date');
+                if (tEl) tEl.textContent = timeStr;
+                if (dEl) dEl.textContent = dateStr;
+                // Re-fit only when the screen size or the text length changes (not every second)
+                const fitKey = window.innerWidth + 'x' + window.innerHeight + '|' + timeStr.length + '|' + dateStr.length;
+                if (fitKey !== screensaverFitKey) { screensaverFitKey = fitKey; fitScreensaverClock(); }
+            }
+            screensaverTick();
         }
         setInterval(updateClock, 1000);
         updateClock();
@@ -2018,7 +2334,7 @@
             const langSelect = document.getElementById('langSelect');
             if (langSelect) langSelect.value = lang;
 
-            updateConnectionStatusText();
+            if (lastStatusKnown) updateStatusPill(lastHwOk, lastLhmOk, true);
             renderSettingsDOM(false);
         }
 
@@ -2146,7 +2462,10 @@
         let refreshMs = parseInt(localStorage.getItem('hwinfo_refresh_ms')) || 4000;
         let refreshTimer = null;
         let isFetching = false;
-        const MAX_HISTORY = 15;
+        let lastCycleBothFailed = false;
+        let lastHwOk = false, lastLhmOk = false, lastStatusKnown = false;
+        let MAX_HISTORY = parseInt(localStorage.getItem("chart_max_points")) || 30;
+        let chartTension = parseFloat(localStorage.getItem("chart_tension")) || 0.4;
 
         let activeMinMaxToggles = JSON.parse(localStorage.getItem('remotehwinfo_minmax_toggles') || '{}');
 
@@ -2247,9 +2566,33 @@
             renderDashboardDOM();
         }
 
+        // Fetch JSON with a hard timeout. NEVER throws and never hangs: resolves to null on any
+        // failure. Uses AbortController + setTimeout instead of AbortSignal.timeout(), which is
+        // missing from older Android WebViews and would throw before any request was sent.
+        function fetchJson(url, timeoutMs) {
+            return new Promise(resolve => {
+                let done = false;
+                let timer = null;
+                const ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+                const finish = v => { if (!done) { done = true; clearTimeout(timer); resolve(v); } };
+                timer = setTimeout(() => {
+                    if (ctrl) { try { ctrl.abort(); } catch (e) {} }
+                    finish(null);
+                }, timeoutMs);
+                try {
+                    const opts = { cache: 'no-store' };
+                    if (ctrl) opts.signal = ctrl.signal;
+                    fetch(url, opts)
+                        .then(r => r.ok ? r.json() : null)
+                        .then(finish, () => finish(null));
+                } catch (e) { finish(null); }
+            });
+        }
+
         function restartLoop() {
             if (refreshTimer) clearInterval(refreshTimer);
             refreshTimer = setInterval(updateValues, refreshMs);
+            updateValues(); // poll right away instead of waiting a full interval
         }
 
         // Periodically release memory that accumulates during a long-running session:
@@ -2334,19 +2677,79 @@
             const isOpen = panel.classList.contains('open');
             if (isOpen) {
                 panel.classList.remove('open');
+                document.body.classList.remove('settings-open');
+                screensaverDismissedAt = Date.now();
                 stopCardPreviews();
             } else {
                 panel.classList.add('open');
+                document.body.classList.add('settings-open');
                 const lang = localStorage.getItem('dashboard_lang') || 'en';
                 changeLanguage(lang);
-                // If the Cards tab happens to already be the active tab from a previous
-                // session, its preview column was still display:none (whole panel was closed)
-                // when sizes were last computed, so recompute now that it's actually visible.
                 const cardsTab = document.getElementById('tab-cards');
                 if (cardsTab && cardsTab.classList.contains('active')) {
                     initCardPreviews();
                 }
             }
+        }
+
+        function toggleStatusPopup(e) {
+            e.stopPropagation();
+            const popup = document.getElementById('status-popup');
+            popup.classList.toggle('open');
+        }
+        document.addEventListener('click', () => {
+            const popup = document.getElementById('status-popup');
+            if (popup) popup.classList.remove('open');
+        });
+
+        function updateStatusPill(hwOk, lhmOk, isRefresh = false) {
+            lastCycleBothFailed = !hwOk && !lhmOk;
+            lastHwOk = hwOk; lastLhmOk = lhmOk; lastStatusKnown = true;
+            if (!isRefresh) {
+                if (!hwOk && !lhmOk) {
+                    if (bothLostSince === null) bothLostSince = Date.now();
+                } else {
+                    bothLostSince = null;
+                    if (!screensaverPreviewing) hideScreensaver();
+                }
+            }
+            const pill   = document.getElementById('status-pill');
+            const text   = document.getElementById('status-pill-text');
+            const popHw  = document.getElementById('popup-hw');
+            const popLhm = document.getElementById('popup-lhm');
+            if (!pill || !text) return;
+
+            const lang = localStorage.getItem('dashboard_lang') || 'en';
+            const t = translations[lang] || translations.en;
+
+            // Update popup rows
+            if (popHw)  { popHw.className  = 'status-popup-val ' + (hwOk  ? 'ok' : 'err'); popHw.textContent  = hwOk  ? t.popup_connected : t.popup_disconnected; }
+            if (popLhm) { popLhm.className = 'status-popup-val ' + (lhmOk ? 'ok' : 'err'); popLhm.textContent = lhmOk ? t.popup_connected : t.popup_disconnected; }
+
+            // Update pill appearance
+            pill.classList.remove('ok','warn','lost');
+            if (hwOk && lhmOk) {
+                pill.classList.add('ok');
+                text.textContent = t.status_connected || 'Connected';
+                document.body.classList.remove('connection-lost', 'overlay-dismissed');
+            } else if (hwOk || lhmOk) {
+                pill.classList.add('warn');
+                text.textContent = hwOk ? (t.status_hw_only || 'HWiNFO Connected') : (t.status_lhm_only || 'LHM/OHM Connected');
+                document.body.classList.remove('connection-lost', 'overlay-dismissed');
+            } else {
+                if (!isRefresh) consecutiveFailCount++;
+                const gracePassed = (Date.now() - dashboardStartTime) > 10000;
+                if (gracePassed && consecutiveFailCount >= 3) {
+                    pill.classList.add('lost');
+                    text.textContent = t.status_lost || '⚠ CONNECTION LOST';
+                    document.body.classList.add('connection-lost');
+                } else {
+                    pill.classList.add('warn');
+                    text.textContent = t.status_connecting || 'Connecting...';
+                }
+                return;
+            }
+            consecutiveFailCount = 0;
         }
 
         function switchSettingsTab(tabId, btn) {
@@ -2522,9 +2925,11 @@
         }
 
         function resetPersistentSensors() {
-            if (!confirm('Reset sensor cache? This will clear all cached sensor names and re-fetch from HWiNFO and LHM/OHM. Your dashboard configuration will not be affected.')) return;
+            if (!confirm(tr('confirm_reset_sensor_cache', 'Reset sensor cache? Cached sensor names will be re-fetched. Dashboard config is not affected.'))) return;
             localStorage.removeItem('remotehwinfo_persistent_sensors');
+            localStorage.removeItem('remotehwinfo_session_minmax');
             persistentSensorMap = {};
+            sessionMinMax = {};
             fetchAllSensorsOnce().then(() => {
                 renderSettingsDOM(false);
             });
@@ -2532,19 +2937,41 @@
 
         function exportLayoutConfig() {
             const exportData = {
+                _version: 2,
+                _exported: new Date().toISOString(),
+                // Card layout
                 config: config,
+                // Appearance
                 theme: customTheme,
                 fontFamily: currentFontFamily,
                 themePreset: activeThemePresetKey,
-                resolution: { width: canvasWidth, height: canvasHeight }
+                settingsFontSize: parseInt(localStorage.getItem('settings_font_size')) || 100,
+                lang: localStorage.getItem('dashboard_lang') || 'en',
+                // Canvas
+                resolution: { width: canvasWidth, height: canvasHeight },
+                // Connection
+                hwinfoIp: hwinfoIp,
+                lhmIp: lhmIp,
+                refreshMs: refreshMs,
+                // Charts
+                chartMaxPoints: MAX_HISTORY,
+                chartTension: chartTension,
+                // Clock + battery
+                clockTimeFormat: clockTimeFormat,
+                clockDateFormat: clockDateFormat,
+                batteryEnabled: localStorage.getItem('show_battery_indicator') === 'true',
+                // UI state
+                screensaverEnabled: screensaverEnabled,
+                screensaverDelayMin: screensaverDelayMin,
+                minmaxToggles: activeMinMaxToggles
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `dashboard_layout_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+            const a = document.createElement('a');
+            a.setAttribute("href", dataStr);
+            a.setAttribute("download", `dashboard_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
         }
 
         function migrateImportedConfig(cfg) {
@@ -2589,63 +3016,123 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported)) {
-                        config = migrateImportedConfig(imported);
-                    } else if (imported && Array.isArray(imported.config)) {
-                        config = migrateImportedConfig(imported.config);
-                        if (imported.theme) {
-                            customTheme = imported.theme;
-                            localStorage.setItem('remotehwinfo_custom_theme', JSON.stringify(customTheme));
-                        }
-                        if (imported.fontFamily) {
-                            currentFontFamily = imported.fontFamily;
-                            localStorage.setItem('remotehwinfo_font_family', currentFontFamily);
-                        }
-                        if (imported.themePreset) {
-                            activeThemePresetKey = imported.themePreset;
-                            localStorage.setItem('remotehwinfo_theme_preset', activeThemePresetKey);
-                        }
+                    const imp = JSON.parse(e.target.result);
+
+                    if (Array.isArray(imp)) {
+                        config = migrateImportedConfig(imp);
+                    } else if (imp && Array.isArray(imp.config)) {
+                        config = migrateImportedConfig(imp.config);
+
+                        // Appearance
+                        if (imp.theme) { customTheme = imp.theme; localStorage.setItem('remotehwinfo_custom_theme', JSON.stringify(customTheme)); }
+                        if (imp.fontFamily) { currentFontFamily = imp.fontFamily; localStorage.setItem('remotehwinfo_font_family', currentFontFamily); }
+                        if (imp.themePreset) { activeThemePresetKey = imp.themePreset; localStorage.setItem('remotehwinfo_theme_preset', activeThemePresetKey); }
                         applyStoredTheme();
-                        if (imported.resolution) {
-                            canvasWidth = imported.resolution.width || 1920;
-                            canvasHeight = imported.resolution.height || 1200;
+                        if (imp.settingsFontSize) { localStorage.setItem('settings_font_size', imp.settingsFontSize); loadSettingsFontSize(); }
+                        if (imp.lang) { localStorage.setItem('dashboard_lang', imp.lang); }
+
+                        // Canvas
+                        if (imp.resolution) {
+                            canvasWidth = imp.resolution.width || 1920;
+                            canvasHeight = imp.resolution.height || 1200;
                             localStorage.setItem('dashboard_canvas_width', canvasWidth);
                             localStorage.setItem('dashboard_canvas_height', canvasHeight);
                             scaleDashboard();
                         }
-                    } else { 
-                        alert(tr("alert_invalid_json", "Invalid JSON file structure.")); 
+
+                        // Connection
+                        if (imp.hwinfoIp) { hwinfoIp = imp.hwinfoIp; localStorage.setItem('hwinfo_ip_address', hwinfoIp); }
+                        if (imp.lhmIp) { lhmIp = imp.lhmIp; localStorage.setItem('lhm_ip_address', lhmIp); }
+                        if (imp.refreshMs >= 1000) { refreshMs = imp.refreshMs; localStorage.setItem('hwinfo_refresh_ms', refreshMs); restartLoop(); }
+
+                        // Charts
+                        if (imp.chartMaxPoints >= 5) { MAX_HISTORY = imp.chartMaxPoints; localStorage.setItem('chart_max_points', MAX_HISTORY); }
+                        if (typeof imp.chartTension === 'number') { chartTension = imp.chartTension; localStorage.setItem('chart_tension', chartTension); }
+
+                        // Clock + battery
+                        if (imp.clockTimeFormat) { clockTimeFormat = imp.clockTimeFormat; localStorage.setItem('clock_time_format', clockTimeFormat); }
+                        if (imp.clockDateFormat) { clockDateFormat = imp.clockDateFormat; localStorage.setItem('clock_date_format', clockDateFormat); }
+                        loadClockFormatPrefs();
+                        if (typeof imp.batteryEnabled === 'boolean') {
+                            localStorage.setItem('show_battery_indicator', imp.batteryEnabled ? 'true' : 'false');
+                            const bi = document.getElementById('battery-indicator');
+                            if (bi && !imp.batteryEnabled) bi.style.display = 'none';
+                            loadBatteryIndicatorPref();
+                        }
+
+                        // Screensaver
+                        if (typeof imp.screensaverEnabled === 'boolean') {
+                            screensaverEnabled = imp.screensaverEnabled;
+                            localStorage.setItem('screensaver_enabled', screensaverEnabled ? 'true' : 'false');
+                        }
+                        if (imp.screensaverDelayMin > 0) {
+                            screensaverDelayMin = imp.screensaverDelayMin;
+                            localStorage.setItem('screensaver_delay_min', screensaverDelayMin);
+                        }
+
+                        // UI state
+                        if (imp.minmaxToggles && typeof imp.minmaxToggles === 'object') {
+                            activeMinMaxToggles = imp.minmaxToggles;
+                            localStorage.setItem('remotehwinfo_minmax_toggles', JSON.stringify(activeMinMaxToggles));
+                        }
+                    } else {
+                        alert(tr("alert_invalid_json", "Invalid JSON file structure."));
                         return;
                     }
+
                     saveConfig();
-                    renderSettingsDOM(true);
+                    renderDashboardDOM();
+                    if (imp && imp.lang) changeLanguage(imp.lang);
+                    renderSettingsDOM();
                     alert(tr("alert_settings_loaded", "Settings loaded successfully!"));
-                } catch (err) { alert(tr("alert_error_reading_file", "Error reading file!")); }
+                } catch (err) {
+                    alert(tr("alert_error_reading_file", "Error reading file!") + " " + err.message);
+                }
             };
             reader.readAsText(file);
             event.target.value = '';
         }
 
         function saveAndTestIp() {
-            hwinfoIp = document.getElementById('hwinfo-ip-input').value.trim().replace('http://', '').replace('/', '');
-            lhmIp = document.getElementById('lhm-ip-input').value.trim().replace('http://', '').replace('/', '');
+            const hwVal = document.getElementById('hwinfo-ip-input').value.trim().replace('http://', '').replace(/\/+$/, '');
+            const lhmVal = document.getElementById('lhm-ip-input').value.trim().replace('http://', '').replace(/\/+$/, '');
             const rVal = parseInt(document.getElementById('refresh-rate-input').value);
+            const pVal = parseInt(document.getElementById('chart-points-input').value);
+            const tVal = parseFloat(document.getElementById('chart-smoothness-input').value);
+
+            // Update and persist all settings immediately
+            if (hwVal) { hwinfoIp = hwVal; localStorage.setItem('hwinfo_ip_address', hwinfoIp); }
+            if (lhmVal) { lhmIp = lhmVal; localStorage.setItem('lhm_ip_address', lhmIp); }
 
             if (!isNaN(rVal) && rVal >= 1000) {
                 refreshMs = rVal;
                 localStorage.setItem('hwinfo_refresh_ms', refreshMs);
                 restartLoop();
             }
-            localStorage.setItem('hwinfo_ip_address', hwinfoIp);
-            localStorage.setItem('lhm_ip_address', lhmIp);
+            if (!isNaN(pVal) && pVal >= 5 && pVal <= 300) {
+                MAX_HISTORY = pVal;
+                localStorage.setItem('chart_max_points', pVal);
+                Object.keys(chartHistories).forEach(id => {
+                    while (chartHistories[id].length > MAX_HISTORY) chartHistories[id].shift();
+                });
+            }
+            if (!isNaN(tVal)) {
+                chartTension = tVal;
+                localStorage.setItem('chart_tension', tVal);
+                Object.keys(chartInstances).forEach(id => {
+                    if (chartInstances[id]?.data?.datasets?.[0]) {
+                        chartInstances[id].data.datasets[0].tension = chartTension;
+                        chartInstances[id].update('none');
+                    }
+                });
+            }
 
-            document.getElementById('ip-test-feedback').style.color = 'var(--accent)';
-            document.getElementById('ip-test-feedback').innerText = 'Settings saved & fetching sensors...';
+            const fb = document.getElementById('ip-test-feedback');
+            if (fb) { fb.style.color = 'var(--accent)'; fb.innerText = 'Saved — connecting...'; }
+
             fetchAllSensorsOnce().then(() => {
-                document.getElementById('ip-test-feedback').innerText = tr('feedback_sensor_lists_updated', 'Sensor lists updated!');
-                renderSettingsDOM(false);
-                updateValues();
+                if (fb) fb.innerText = tr('feedback_sensor_lists_updated', 'Sensor lists updated!');
+                renderSettingsDOM();
             });
         }
 
@@ -2762,13 +3249,11 @@
 
         async function fetchAllSensorsOnce() {
             await Promise.allSettled([
-                fetch(`http://${hwinfoIp}/json.json`, { signal: AbortSignal.timeout(3000) })
-                    .then(res => res.ok ? res.json() : null)
+                fetchJson(`http://${hwinfoIp}/json.json`, 3000)
                     .then(data => { if (data) { parseRemoteHwInfoJson(data); localStorage.setItem('remotehwinfo_persistent_sensors', JSON.stringify(persistentSensorMap)); } })
                     .catch(() => {}),
-                fetch(`http://${lhmIp}/data.json`, { signal: AbortSignal.timeout(3000) })
-                    .then(res => res.ok ? res.json() : null)
-                    .then(data => { if (data) { traverseLhmTree(data); localStorage.setItem('remotehwinfo_persistent_sensors', JSON.stringify(persistentSensorMap)); } })
+                fetchJson(`http://${lhmIp}/data.json`, 3000)
+                    .then(data => { if (data) { traverseLhmTree(data); buildLhmValueMap(data); localStorage.setItem('remotehwinfo_persistent_sensors', JSON.stringify(persistentSensorMap)); } })
                     .catch(() => {})
             ]);
         }
@@ -3071,7 +3556,7 @@
                 (card.charts || []).forEach(chart => {
                     const ctx = document.getElementById(`chart-canvas-${chart.id}`);
                     if (ctx) {
-                        if (!chartHistories[chart.id]) chartHistories[chart.id] = new Array(MAX_HISTORY).fill(0);
+                        if (!chartHistories[chart.id]) chartHistories[chart.id] = [];
                         const chartColor = chart.color || '#38bdf8';
                         const isFill = chart.fill !== undefined ? chart.fill : true;
                         const lWidth = chart.lineWidth !== undefined ? chart.lineWidth : 2;
@@ -3085,15 +3570,18 @@
                         chartInstances[chart.id] = new Chart(ctx, {
                             type: 'line',
                             data: {
-                                labels: new Array(MAX_HISTORY).fill(''),
+                                labels: [],
                                 datasets: [{
                                     data: chartHistories[chart.id],
                                     borderColor: chartColor,
                                     borderWidth: lWidth,
                                     backgroundColor: isFill ? hexToRgba(chartColor, 0.08) : 'transparent',
                                     fill: isFill,
-                                    tension: 0.3,
-                                    pointRadius: 0
+                                    tension: chartTension,
+                                    cubicInterpolationMode: 'monotone',
+                                    pointRadius: 0,
+                                    pointHoverRadius: 4,
+                                    pointHoverBackgroundColor: chartColor
                                 }]
                             },
                             options: {
@@ -3102,8 +3590,20 @@
                                 plugins: { 
                                     legend: { display: false },
                                     tooltip: {
-                                        bodyFont: { family: currentFontFamily },
-                                        titleFont: { family: currentFontFamily }
+                                        bodyFont: { family: currentFontFamily, size: 13, weight: '700' },
+                                        titleFont: { family: currentFontFamily, size: 11 },
+                                        backgroundColor: 'rgba(0,0,0,0.85)',
+                                        borderColor: chart.color || '#38bdf8',
+                                        borderWidth: 1,
+                                        padding: 10,
+                                        displayColors: false,
+                                        callbacks: {
+                                            title: () => chart.title || '',
+                                            label: (ctx) => {
+                                                const val = ctx.parsed.y;
+                                                return formatSensorValue(val, '', chart.convert || 'none', chart.decimals ?? 1);
+                                            }
+                                        }
                                     }
                                 },
                                 scales: {
@@ -3391,6 +3891,9 @@
             }
         });
 
+        // Registry for sensor dropdown callbacks — avoids inline-eval issues
+        const sensorDdCallbacks = {};
+
         function buildSensorSelect(sensors, selectedId, onchangeStr, extraStyle = '') {
             const groups = {};
             sensors.forEach(s => {
@@ -3406,18 +3909,23 @@
                 ? (selectedSensor.text || selectedSensor.fullLabel) + (selectedSensor.rawVal !== undefined ? ` [${formatDropdownPreviewValue(selectedSensor.rawVal, selectedSensor.rawUnit)}]` : '')
                 : '-- Select Sensor --';
 
-            let groupsHtml = `<div class="sensor-dd-option ${!selectedId ? 'selected' : ''}" data-value="" onclick="sensorDdSelect('${uid}', '', '-- Select Sensor --', ${onchangeStr.replace(/this\.value/g, "''")})">-- Select Sensor --</div>`;
+            // Store callback as a function in the registry
+            sensorDdCallbacks[uid] = (val) => {
+                const fn = new Function('value', onchangeStr.replace(/this\.value/g, 'value'));
+                fn(val);
+            };
+
+            let groupsHtml = `<div class="sensor-dd-option ${!selectedId ? 'selected' : ''}" data-value="" onclick="sensorDdSelect('${uid}', '', '-- Select Sensor --')">-- Select Sensor --</div>`;
 
             sortedCats.forEach(cat => {
-                const esc = cat.replace(/'/g, "\\'");
+                const esc = cat.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 groupsHtml += `<div class="sensor-dd-group" data-group="${esc}"><div class="sensor-dd-group-label">${cat}</div>`;
                 groups[cat].forEach(s => {
                     const val = s.rawVal !== undefined ? formatDropdownPreviewValue(s.rawVal, s.rawUnit) : '';
                     const label = (s.text || s.fullLabel) + (val ? ` [${val}]` : '');
                     const escLabel = label.replace(/'/g, "\\'");
                     const escId = s.id.replace(/'/g, "\\'");
-                    const cb = onchangeStr.replace(/this\.value/g, `'${escId}'`);
-                    groupsHtml += `<div class="sensor-dd-option ${s.id === selectedId ? 'selected' : ''}" data-value="${s.id}" onclick="sensorDdSelect('${uid}', '${escId}', '${escLabel}', ${cb})">${label}</div>`;
+                    groupsHtml += `<div class="sensor-dd-option ${s.id === selectedId ? 'selected' : ''}" data-value="${escId}" onclick="sensorDdSelect('${uid}', '${escId}', '${escLabel}')">${label}</div>`;
                 });
                 groupsHtml += `</div>`;
             });
@@ -3439,6 +3947,29 @@
                 </div>`;
         }
 
+        function sensorDdSelect(uid, value, label) {
+            // Update label display
+            const labelEl = document.getElementById(`${uid}_label`);
+            if (labelEl) labelEl.textContent = label || '-- Select Sensor --';
+
+            // Close panel and reset search
+            const panel = document.getElementById(uid);
+            if (panel) panel.classList.remove('open');
+            const inp = panel && panel.querySelector('.sensor-dd-search');
+            if (inp) { inp.value = ''; filterSensorDd(uid, ''); }
+
+            // Update selected highlight
+            const list = document.getElementById(`${uid}_list`);
+            if (list) {
+                list.querySelectorAll('.sensor-dd-option').forEach(o => o.classList.toggle('selected', o.dataset.value === value));
+            }
+
+            // Fire the registered callback
+            if (sensorDdCallbacks[uid]) {
+                try { sensorDdCallbacks[uid](value); } catch(e) { console.warn('sensorDdSelect callback error:', e); }
+            }
+        }
+
         function toggleSensorDd(uid) {
             const panel = document.getElementById(uid);
             if (!panel) return;
@@ -3446,24 +3977,8 @@
             document.querySelectorAll('.sensor-dd-panel.open').forEach(p => p.classList.remove('open'));
             if (!isOpen) {
                 panel.classList.add('open');
-                // Focus search input
                 const inp = panel.querySelector('.sensor-dd-search');
                 if (inp) setTimeout(() => inp.focus(), 50);
-            }
-        }
-
-        function sensorDdSelect(uid, value, label, callbackResult) {
-            const labelEl = document.getElementById(`${uid}_label`);
-            if (labelEl) labelEl.textContent = label;
-            const panel = document.getElementById(uid);
-            if (panel) panel.classList.remove('open');
-            // Reset search
-            const inp = panel && panel.querySelector('.sensor-dd-search');
-            if (inp) { inp.value = ''; filterSensorDd(uid, ''); }
-            // Update selected highlight
-            const list = document.getElementById(`${uid}_list`);
-            if (list) {
-                list.querySelectorAll('.sensor-dd-option').forEach(o => o.classList.toggle('selected', o.dataset.value === value));
             }
         }
 
@@ -3485,13 +4000,25 @@
 
         function renderSettingsDOM(updateIpFields = true) {
             const list = document.getElementById('settings-cards-list');
-            if (updateIpFields) {
-                document.getElementById('hwinfo-ip-input').value = hwinfoIp;
-                document.getElementById('lhm-ip-input').value = lhmIp;
-                document.getElementById('refresh-rate-input').value = refreshMs;
-                document.getElementById('custom-res-width').value = canvasWidth;
-                document.getElementById('custom-res-height').value = canvasHeight;
-            }
+            // Always sync connection/display fields so they're never stale
+            const hwEl = document.getElementById('hwinfo-ip-input');
+            const lhmEl = document.getElementById('lhm-ip-input');
+            const rrEl = document.getElementById('refresh-rate-input');
+            const cpEl = document.getElementById('chart-points-input');
+            const csEl = document.getElementById('chart-smoothness-input');
+            const crwEl = document.getElementById('custom-res-width');
+            const crhEl = document.getElementById('custom-res-height');
+            if (hwEl) hwEl.value = hwinfoIp;
+            if (lhmEl) lhmEl.value = lhmIp;
+            if (rrEl) rrEl.value = refreshMs;
+            if (cpEl) cpEl.value = MAX_HISTORY;
+            if (csEl) csEl.value = chartTension;
+            if (crwEl) crwEl.value = canvasWidth;
+            if (crhEl) crhEl.value = canvasHeight;
+            const ssEnEl = document.getElementById('screensaver-enabled-input');
+            const ssMinEl = document.getElementById('screensaver-delay-input');
+            if (ssEnEl) ssEnEl.checked = screensaverEnabled;
+            if (ssMinEl) ssMinEl.value = screensaverDelayMin;
             syncThemeInputs();
 
             const lang = localStorage.getItem('dashboard_lang') || 'en';
@@ -3600,68 +4127,68 @@
                                     <button class="btn-small" onclick="moveChartDown(${cIndex}, ${chIndex})" ${chIndex === (card.charts.length - 1) ? 'disabled style="opacity:0.3;"' : ''}>▼</button>
                                 </div>
                                 <span class="item-color-dot" style="background:${chartColor};"></span>
+                                <input type="color" value="${chartColor}" onchange="updateChart(${cIndex}, ${chIndex}, 'color', this.value)" style="width:36px;height:36px;flex-shrink:0;">
                                 <input type="text" class="item-title-input" placeholder="Title" value="${ch.title || ''}" onchange="updateChart(${cIndex}, ${chIndex}, 'title', this.value)">
-                                <span class="item-source-tag">${currentSource === 'hwinfo' ? 'HWiNFO' : 'LHM/OHM'}</span>
-                                <button class="btn btn-danger" onclick="removeChart(${cIndex}, ${chIndex})" style="padding: 6px 10px;">✕</button>
+                                <div class="source-pills">
+                                    <button class="source-pill ${currentSource==='hwinfo'?'active':''}" onclick="updateChartSource(${cIndex},${chIndex},'hwinfo')">HWiNFO</button>
+                                    <button class="source-pill ${currentSource==='lhm'?'active':''}" onclick="updateChartSource(${cIndex},${chIndex},'lhm')">LHM</button>
+                                </div>
+                                <button class="delete-btn" onclick="removeChart(${cIndex}, ${chIndex})">✕</button>
                             </div>
                             <div class="item-body">
-                            <div class="config-row">
-                                <div class="radio-group">
-                                    <label><input type="radio" name="chart_src_${cIndex}_${chIndex}" value="hwinfo" ${currentSource === 'hwinfo' ? 'checked' : ''} onchange="updateChartSource(${cIndex}, ${chIndex}, 'hwinfo')"> HWiNFO</label>
-                                    <label><input type="radio" name="chart_src_${cIndex}_${chIndex}" value="lhm" ${currentSource === 'lhm' ? 'checked' : ''} onchange="updateChartSource(${cIndex}, ${chIndex}, 'lhm')"> LHM/OHM</label>
+                                <div class="ctrl-grid">
+                                    <div class="ctrl-field">
+                                        <label>Font size</label>
+                                        <select onchange="updateChart(${cIndex},${chIndex},'fontSize',this.value)">
+                                            <option value="sm" ${ch.fontSize==='sm'?'selected':''}>Small</option>
+                                            <option value="md" ${!ch.fontSize||ch.fontSize==='md'?'selected':''}>Normal</option>
+                                            <option value="lg" ${ch.fontSize==='lg'?'selected':''}>Large</option>
+                                            <option value="xl" ${ch.fontSize==='xl'?'selected':''}>XL</option>
+                                        </select>
+                                    </div>
+                                    <div class="ctrl-field">
+                                        <label>Decimals</label>
+                                        <select onchange="updateChart(${cIndex},${chIndex},'decimals',parseInt(this.value))">
+                                            ${[0,1,2,3,4].map(d=>`<option value="${d}" ${currentDecimals===d?'selected':''}>${d}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="ctrl-field">
+                                        <label>Conversion</label>
+                                        <select onchange="updateChart(${cIndex},${chIndex},'convert',this.value)">
+                                            <option value="none" ${currentConvert==='none'?'selected':''}>None</option>
+                                            <option value="mhz_to_ghz" ${currentConvert==='mhz_to_ghz'?'selected':''}>MHz→GHz</option>
+                                            <option value="ghz_to_mhz" ${currentConvert==='ghz_to_mhz'?'selected':''}>GHz→MHz</option>
+                                            <option value="c_to_f" ${currentConvert==='c_to_f'?'selected':''}>°C→°F</option>
+                                            <option value="f_to_c" ${currentConvert==='f_to_c'?'selected':''}>°F→°C</option>
+                                            <option value="auto_speed" ${currentConvert==='auto_speed'?'selected':''}>Auto Speed</option>
+                                            <option value="bytes_to_mb" ${currentConvert==='bytes_to_mb'?'selected':''}>B→MB</option>
+                                            <option value="bytes_to_gb" ${currentConvert==='bytes_to_gb'?'selected':''}>B→GB</option>
+                                            <option value="mb_to_gb" ${currentConvert==='mb_to_gb'?'selected':''}>MB→GB</option>
+                                            <option value="rpm" ${currentConvert==='rpm'?'selected':''}>RPM</option>
+                                            <option value="percent" ${currentConvert==='percent'?'selected':''}>Force %</option>
+                                            <option value="volts" ${currentConvert==='volts'?'selected':''}>Volts</option>
+                                            <option value="watts" ${currentConvert==='watts'?'selected':''}>Watts</option>
+                                        </select>
+                                    </div>
+                                    <div class="ctrl-field">
+                                        <label>Area fill</label>
+                                        <select onchange="updateChart(${cIndex},${chIndex},'fill',this.value==='true')">
+                                            <option value="true" ${isFill?'selected':''}>On</option>
+                                            <option value="false" ${!isFill?'selected':''}>Off</option>
+                                        </select>
+                                    </div>
+                                    <div class="ctrl-field">
+                                        <label>Line width</label>
+                                        <select onchange="updateChart(${cIndex},${chIndex},'lineWidth',parseInt(this.value))">
+                                            ${[1,2,3,4,5].map(w=>`<option value="${w}" ${lWidth===w?'selected':''}>${w}px</option>`).join('')}
+                                        </select>
+                                    </div>
                                 </div>
-
-                                <input type="color" value="${chartColor}" onchange="updateChart(${cIndex}, ${chIndex}, 'color', this.value)" title="Choose Color">
-
-                                <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'fontSize', this.value)">
-                                    <option value="sm" ${ch.fontSize === 'sm' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_small || 'Small'}</option>
-                                    <option value="md" ${!ch.fontSize || ch.fontSize === 'md' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_normal || 'Normal'}</option>
-                                    <option value="lg" ${ch.fontSize === 'lg' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_large || 'Large'}</option>
-                                    <option value="xl" ${ch.fontSize === 'xl' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_xl || 'XL'}</option>
-                                </select>
-
-                                <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'decimals', parseInt(this.value))" title="${t.lbl_decimals_tooltip || 'Decimals'}">
-                                    <option value="0" ${currentDecimals === 0 ? 'selected' : ''}>0${t.lbl_dec_suffix || ' Decimals'}</option>
-                                    <option value="1" ${currentDecimals === 1 ? 'selected' : ''}>1${t.lbl_dec_suffix || ' Decimal'}</option>
-                                    <option value="2" ${currentDecimals === 2 ? 'selected' : ''}>2${t.lbl_dec_suffix || ' Decimals'}</option>
-                                    <option value="3" ${currentDecimals === 3 ? 'selected' : ''}>3${t.lbl_dec_suffix || ' Decimals'}</option>
-                                    <option value="4" ${currentDecimals === 4 ? 'selected' : ''}>4${t.lbl_dec_suffix || ' Decimals'}</option>
-                                </select>
-
-                                <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'convert', this.value)">
-                                    <option value="none" ${currentConvert === 'none' ? 'selected' : ''}>${t.conv_none || 'No Conversion'}</option>
-                                    <option value="mhz_to_ghz" ${currentConvert === 'mhz_to_ghz' ? 'selected' : ''}>${t.conv_mhz_ghz || 'MHz -> GHz'}</option>
-                                    <option value="ghz_to_mhz" ${currentConvert === 'ghz_to_mhz' ? 'selected' : ''}>${t.conv_ghz_mhz || 'GHz -> MHz'}</option>
-                                    <option value="c_to_f" ${currentConvert === 'c_to_f' ? 'selected' : ''}>${t.conv_c_f || '°C -> °F'}</option>
-                                    <option value="f_to_c" ${currentConvert === 'f_to_c' ? 'selected' : ''}>${t.conv_f_c || '°F -> °C'}</option>
-                                    <option value="auto_speed" ${currentConvert === 'auto_speed' ? 'selected' : ''}>${t.conv_auto_speed || 'Auto Transfer Rate'}</option>
-                                    <option value="bytes_to_mb" ${currentConvert === 'bytes_to_mb' ? 'selected' : ''}>${t.conv_bytes_mb || 'Bytes -> MB'}</option>
-                                    <option value="bytes_to_gb" ${currentConvert === 'bytes_to_gb' ? 'selected' : ''}>${t.conv_bytes_gb || 'Bytes -> GB'}</option>
-                                    <option value="mb_to_gb" ${currentConvert === 'mb_to_gb' ? 'selected' : ''}>${t.conv_mb_gb || 'MB -> GB'}</option>
-                                    <option value="rpm" ${currentConvert === 'rpm' ? 'selected' : ''}>${t.conv_rpm || 'RPM'}</option>
-                                    <option value="percent" ${currentConvert === 'percent' ? 'selected' : ''}>${t.conv_percent || 'Force %'}</option>
-                                    <option value="volts" ${currentConvert === 'volts' ? 'selected' : ''}>${t.conv_volts || 'Volts (V)'}</option>
-                                    <option value="watts" ${currentConvert === 'watts' ? 'selected' : ''}>${t.conv_watts || 'Watts (W)'}</option>
-                                </select>
-
-                                <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'fill', this.value === 'true')">
-                                    <option value="true" ${isFill ? 'selected' : ''}>${t.fill_on || 'Area Fill: On'}</option>
-                                    <option value="false" ${!isFill ? 'selected' : ''}>${t.fill_off || 'Area Fill: Off'}</option>
-                                </select>
-
-                                <select class="fixed-width-select" onchange="updateChart(${cIndex}, ${chIndex}, 'lineWidth', parseInt(this.value))">
-                                    <option value="1" ${lWidth === 1 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}1px</option>
-                                    <option value="2" ${lWidth === 2 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}2px</option>
-                                    <option value="3" ${lWidth === 3 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}3px</option>
-                                    <option value="4" ${lWidth === 4 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}4px</option>
-                                    <option value="5" ${lWidth === 5 ? 'selected' : ''}>${t.linewidth_prefix || 'Line Width: '}5px</option>
-                                </select>
-                            </div>
-                            <div class="config-row" style="border-top: 1px dashed var(--border); padding-top: 8px;">
-                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase;">${t.lbl_sensor_colon || 'Sensor:'}</span>
-                                ${buildSensorSelect(filteredSensors, ch.sensorId, `updateChart(${cIndex}, ${chIndex}, 'sensorId', this.value)`)}
-                            </div>
-                            ${buildDynamicColorUI(cIndex, chIndex, ch)}
+                                <div class="sensor-row" style="margin-top:8px;">
+                                    <span style="font-size:0.7rem;font-weight:800;text-transform:uppercase;color:var(--muted);white-space:nowrap;">Sensor</span>
+                                    ${buildSensorSelect(filteredSensors, ch.sensorId, `updateChart(${cIndex}, ${chIndex}, 'sensorId', this.value)`)}
+                                </div>
+                                ${buildDynamicColorUI(cIndex, chIndex, ch)}
                             </div>
                         </div>
                     `;
@@ -3695,67 +4222,71 @@
                                     <button class="btn-small" onclick="moveSensorDown(${cIndex}, ${sIndex})" ${sIndex === (card.sensors.length - 1) ? 'disabled style="opacity:0.3;"' : ''}>▼</button>
                                 </div>
                                 <input type="text" class="item-title-input" placeholder="Label" value="${s.label || ''}" onchange="updateSensor(${cIndex}, ${sIndex}, 'label', this.value)">
-                                <span class="item-source-tag">${currentSource === 'hwinfo' ? 'HWiNFO' : 'LHM/OHM'}</span>
-                                ${s.sparkline ? '<span class="item-source-tag">📈</span>' : ''}
-                                <button class="btn btn-danger" onclick="removeSensor(${cIndex}, ${sIndex})" style="padding: 6px 10px;">✕</button>
+                                <div class="source-pills">
+                                    <button class="source-pill ${currentSource==='hwinfo'?'active':''}" onclick="updateSensorSource(${cIndex},${sIndex},'hwinfo')">HWiNFO</button>
+                                    <button class="source-pill ${currentSource==='lhm'?'active':''}" onclick="updateSensorSource(${cIndex},${sIndex},'lhm')">LHM</button>
+                                </div>
+                                <button class="delete-btn" onclick="removeSensor(${cIndex}, ${sIndex})">✕</button>
                             </div>
                             <div class="item-body">
-                            <div class="config-row">
-                                <div class="radio-group">
-                                    <label><input type="radio" name="sens_src_${cIndex}_${sIndex}" value="hwinfo" ${currentSource === 'hwinfo' ? 'checked' : ''} onchange="updateSensorSource(${cIndex}, ${sIndex}, 'hwinfo')"> HWiNFO</label>
-                                    <label><input type="radio" name="sens_src_${cIndex}_${sIndex}" value="lhm" ${currentSource === 'lhm' ? 'checked' : ''} onchange="updateSensorSource(${cIndex}, ${sIndex}, 'lhm')"> LHM/OHM</label>
+                                <div class="ctrl-grid">
+                                    <div class="ctrl-field">
+                                        <label>Font size</label>
+                                        <select onchange="updateSensor(${cIndex},${sIndex},'fontSize',this.value)">
+                                            <option value="sm" ${s.fontSize==='sm'?'selected':''}>Small</option>
+                                            <option value="md" ${!s.fontSize||s.fontSize==='md'?'selected':''}>Normal</option>
+                                            <option value="lg" ${s.fontSize==='lg'?'selected':''}>Large</option>
+                                            <option value="xl" ${s.fontSize==='xl'?'selected':''}>XL</option>
+                                        </select>
+                                    </div>
+                                    <div class="ctrl-field">
+                                        <label>Decimals</label>
+                                        <select onchange="updateSensor(${cIndex},${sIndex},'decimals',parseInt(this.value))">
+                                            ${[0,1,2,3,4].map(d=>`<option value="${d}" ${currentDecimals===d?'selected':''}>${d}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="ctrl-field">
+                                        <label>Conversion</label>
+                                        <select onchange="updateSensor(${cIndex},${sIndex},'convert',this.value)">
+                                            <option value="none" ${currentConvert==='none'?'selected':''}>None</option>
+                                            <option value="mhz_to_ghz" ${currentConvert==='mhz_to_ghz'?'selected':''}>MHz→GHz</option>
+                                            <option value="ghz_to_mhz" ${currentConvert==='ghz_to_mhz'?'selected':''}>GHz→MHz</option>
+                                            <option value="c_to_f" ${currentConvert==='c_to_f'?'selected':''}>°C→°F</option>
+                                            <option value="f_to_c" ${currentConvert==='f_to_c'?'selected':''}>°F→°C</option>
+                                            <option value="auto_speed" ${currentConvert==='auto_speed'?'selected':''}>Auto Speed</option>
+                                            <option value="bytes_to_mb" ${currentConvert==='bytes_to_mb'?'selected':''}>B→MB</option>
+                                            <option value="bytes_to_gb" ${currentConvert==='bytes_to_gb'?'selected':''}>B→GB</option>
+                                            <option value="mb_to_gb" ${currentConvert==='mb_to_gb'?'selected':''}>MB→GB</option>
+                                            <option value="rpm" ${currentConvert==='rpm'?'selected':''}>RPM</option>
+                                            <option value="percent" ${currentConvert==='percent'?'selected':''}>Force %</option>
+                                            <option value="volts" ${currentConvert==='volts'?'selected':''}>Volts</option>
+                                            <option value="watts" ${currentConvert==='watts'?'selected':''}>Watts</option>
+                                        </select>
+                                    </div>
+                                    <div class="ctrl-field">
+                                        <label>Placement</label>
+                                        <select onchange="updateSensor(${cIndex},${sIndex},'chartId',this.value)">
+                                            <option value="">Full card</option>
+                                            ${(card.charts||[]).map(ch=>`<option value="${ch.id}" ${s.chartId===ch.id?'selected':''}>↳ ${ch.title||'Chart'}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="ctrl-field">
+                                        <label>Alert above</label>
+                                        <input type="number" placeholder="—" value="${s.alertThreshold!==undefined?s.alertThreshold:''}" onchange="updateSensor(${cIndex},${sIndex},'alertThreshold',this.value!==''?parseFloat(this.value):undefined)">
+                                    </div>
+                                    <div class="ctrl-field" style="justify-content:flex-end;">
+                                        <label>Sparkline</label>
+                                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 0;">
+                                            <input type="checkbox" ${s.sparkline?'checked':''} onchange="updateSensor(${cIndex},${sIndex},'sparkline',this.checked);renderDashboardDOM();" style="accent-color:var(--accent);width:18px;height:18px;">
+                                            <span style="font-size:0.85rem;">📈 On</span>
+                                        </label>
+                                    </div>
                                 </div>
-
-                                <select class="fixed-width-select" onchange="updateSensor(${cIndex}, ${sIndex}, 'fontSize', this.value)">
-                                    <option value="sm" ${s.fontSize === 'sm' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_small || 'Small'}</option>
-                                    <option value="md" ${!s.fontSize || s.fontSize === 'md' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_normal || 'Normal'}</option>
-                                    <option value="lg" ${s.fontSize === 'lg' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_large || 'Large'}</option>
-                                    <option value="xl" ${s.fontSize === 'xl' ? 'selected' : ''}>${t.lbl_font_prefix || 'Font: '}${t.fs_xl || 'XL'}</option>
-                                </select>
-
-                                <select class="fixed-width-select" onchange="updateSensor(${cIndex}, ${sIndex}, 'decimals', parseInt(this.value))" title="${t.lbl_decimals_tooltip || 'Decimals'}">
-                                    <option value="0" ${currentDecimals === 0 ? 'selected' : ''}>0${t.lbl_dec_suffix || ' Decimals'}</option>
-                                    <option value="1" ${currentDecimals === 1 ? 'selected' : ''}>1${t.lbl_dec_suffix || ' Decimal'}</option>
-                                    <option value="2" ${currentDecimals === 2 ? 'selected' : ''}>2${t.lbl_dec_suffix || ' Decimals'}</option>
-                                    <option value="3" ${currentDecimals === 3 ? 'selected' : ''}>3${t.lbl_dec_suffix || ' Decimals'}</option>
-                                    <option value="4" ${currentDecimals === 4 ? 'selected' : ''}>4${t.lbl_dec_suffix || ' Decimals'}</option>
-                                </select>
-
-                                <select class="fixed-width-select" onchange="updateSensor(${cIndex}, ${sIndex}, 'convert', this.value)">
-                                    <option value="none" ${currentConvert === 'none' ? 'selected' : ''}>${t.conv_none || 'No Conversion'}</option>
-                                    <option value="mhz_to_ghz" ${currentConvert === 'mhz_to_ghz' ? 'selected' : ''}>${t.conv_mhz_ghz || 'MHz -> GHz'}</option>
-                                    <option value="ghz_to_mhz" ${currentConvert === 'ghz_to_mhz' ? 'selected' : ''}>${t.conv_ghz_mhz || 'GHz -> MHz'}</option>
-                                    <option value="c_to_f" ${currentConvert === 'c_to_f' ? 'selected' : ''}>${t.conv_c_f || '°C -> °F'}</option>
-                                    <option value="f_to_c" ${currentConvert === 'f_to_c' ? 'selected' : ''}>${t.conv_f_c || '°F -> °C'}</option>
-                                    <option value="auto_speed" ${currentConvert === 'auto_speed' ? 'selected' : ''}>${t.conv_auto_speed || 'Auto Transfer Rate'}</option>
-                                    <option value="bytes_to_mb" ${currentConvert === 'bytes_to_mb' ? 'selected' : ''}>${t.conv_bytes_mb || 'Bytes -> MB'}</option>
-                                    <option value="bytes_to_gb" ${currentConvert === 'bytes_to_gb' ? 'selected' : ''}>${t.conv_bytes_gb || 'Bytes -> GB'}</option>
-                                    <option value="mb_to_gb" ${currentConvert === 'mb_to_gb' ? 'selected' : ''}>${t.conv_mb_gb || 'MB -> GB'}</option>
-                                    <option value="rpm" ${currentConvert === 'rpm' ? 'selected' : ''}>${t.conv_rpm || 'RPM'}</option>
-                                    <option value="percent" ${currentConvert === 'percent' ? 'selected' : ''}>${t.conv_percent || 'Force %'}</option>
-                                    <option value="volts" ${currentConvert === 'volts' ? 'selected' : ''}>${t.conv_volts || 'Volts (V)'}</option>
-                                    <option value="watts" ${currentConvert === 'watts' ? 'selected' : ''}>${t.conv_watts || 'Watts (W)'}</option>
-                                </select>
-
-                                <input type="number" class="small-input" placeholder="${t.lbl_alert_placeholder || 'Alert > value'}" value="${s.alertThreshold !== undefined ? s.alertThreshold : ''}" onchange="updateSensor(${cIndex}, ${sIndex}, 'alertThreshold', this.value !== '' ? parseFloat(this.value) : undefined)">
-
-                                <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-size:0.8rem; color:var(--muted); white-space:nowrap;" title="${t.sparkline_tooltip || 'Show sparkline trend next to value'}">
-                                    <input type="checkbox" ${s.sparkline ? 'checked' : ''} onchange="updateSensor(${cIndex}, ${sIndex}, 'sparkline', this.checked); renderDashboardDOM();" style="accent-color:var(--accent);">
-                                    📈 ${t.sparkline_label || 'Sparkline'}
-                                </label>
-                            </div>
-                            
-                            <div class="config-row" style="border-top: 1px dashed var(--border); padding-top: 8px;">
-                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase;">${t.lbl_sensor_colon || 'Sensor:'}</span>
-                                ${buildSensorSelect(filteredSensors, s.sensorId, `updateSensor(${cIndex}, ${sIndex}, 'sensorId', this.value)`)}
-                                
-                                <span style="font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-left: 10px;">${t.lbl_placement_colon || 'Placement:'}</span>
-                                <select onchange="updateSensor(${cIndex}, ${sIndex}, 'chartId', this.value)" style="flex: 0 0 200px;">
-                                    <option value="">${t.placement_full || 'Placement: Full Card'}</option>
-                                    ${(card.charts || []).map(ch => `<option value="${ch.id}" ${s.chartId === ch.id ? 'selected' : ''}>${t.under_chart || 'Under: '}${ch.title || 'Chart'}</option>`).join('')}
-                                </select>
-                            </div>
-                            ${buildSensorColorUI(cIndex, sIndex, s)}
+                                <div class="sensor-row" style="margin-top:8px;">
+                                    <span style="font-size:0.7rem;font-weight:800;text-transform:uppercase;color:var(--muted);white-space:nowrap;">Sensor</span>
+                                    ${buildSensorSelect(filteredSensors, s.sensorId, `updateSensor(${cIndex}, ${sIndex}, 'sensorId', this.value)`)}
+                                </div>
+                                ${buildSensorColorUI(cIndex, sIndex, s)}
                             </div>
                         </div>
                     `;
@@ -4110,21 +4641,6 @@
             renderSettingsDOM(false);
         }
 
-        function updateConnectionStatusText() {
-            const statusEl = document.getElementById('connection-status');
-            const lang = localStorage.getItem('dashboard_lang') || 'en';
-            const t = translations[lang] || translations.en;
-            if (!statusEl) return;
-
-            if (statusEl.classList.contains('err')) {
-                statusEl.innerText = t.status_all_err || 'Connection lost!';
-            } else if (statusEl.classList.contains('warn')) {
-                statusEl.innerText = t.status_hw_err || 'HWiNFO OK | LHM/OHM disconnected';
-            } else {
-                statusEl.innerText = t.status_ok || 'HWiNFO OK | LHM/OHM OK';
-            }
-        }
-
         // Cached value maps - rebuilt once per fetch cycle
         let hwValueMap = {};
         let lhmValueMap = {};
@@ -4177,6 +4693,13 @@
 
         let fetchCycleCount = 0;
         let cardLastUpdate = {};
+        let consecutiveFailCount = 0;
+        const dashboardStartTime = Date.now();
+        const lastKnownValues = {}; // sensor/chart id → { text, numeric }
+
+        function dismissConnectionOverlay() {
+            document.body.classList.add('overlay-dismissed');
+        }
         const sparklineHistories = {};
         const SPARKLINE_MAX = 30;
 
@@ -4202,56 +4725,33 @@
             ctx.stroke();
         }
 
-        async function updateValues() {
-            if (isFetching) return;
-            isFetching = true;
+        async function runUpdateCycle() {
 
             let hwSuccess = false;
             let lhmSuccess = false;
             lastPolledSensorIds.clear();
 
             try {
-                const hwRes = await fetch(`http://${hwinfoIp}/json.json`, { signal: AbortSignal.timeout(3000) });
-                if (hwRes.ok) {
-                    const hwData = await hwRes.json();
-                    buildHwValueMap(hwData);
-                    parseRemoteHwInfoJson(hwData);
+                // Run both fetches in parallel instead of sequentially
+                const [hwResult, lhmResult] = await Promise.allSettled([
+                    fetchJson(`http://${hwinfoIp}/json.json`, 2000),
+                    fetchJson(`http://${lhmIp}/data.json`, 2000)
+                ]);
+
+                if (hwResult.status === 'fulfilled' && hwResult.value) {
+                    buildHwValueMap(hwResult.value);
+                    parseRemoteHwInfoJson(hwResult.value);
                     hwSuccess = true;
                 }
-            } catch (e) {}
-
-            try {
-                const lhmRes = await fetch(`http://${lhmIp}/data.json`, { signal: AbortSignal.timeout(3000) });
-                if (lhmRes.ok) {
-                    const lhmData = await lhmRes.json();
+                if (lhmResult.status === 'fulfilled' && lhmResult.value) {
                     lhmValueMap = {};
-                    traverseLhmTree(lhmData);
-                    buildLhmValueMap(lhmData);
+                    traverseLhmTree(lhmResult.value);
+                    buildLhmValueMap(lhmResult.value);
                     lhmSuccess = true;
                 }
             } catch (e) {}
 
-            const statusEl = document.getElementById('connection-status');
-            const lang = localStorage.getItem('dashboard_lang') || 'en';
-            const t = translations[lang] || translations.en;
-
-            if (hwSuccess && lhmSuccess) {
-                statusEl.className = "status";
-                statusEl.innerText = t.status_ok || "HWiNFO OK | LHM/OHM OK";
-                document.body.classList.remove('connection-lost');
-            } else if (hwSuccess && !lhmSuccess) {
-                statusEl.className = "status warn";
-                statusEl.innerText = t.status_hw_err || "HWiNFO OK | LHM/OHM disconnected";
-                document.body.classList.remove('connection-lost');
-            } else if (!hwSuccess && lhmSuccess) {
-                statusEl.className = "status warn";
-                statusEl.innerText = t.status_lhm_err || "HWiNFO disconnected | LHM/OHM OK";
-                document.body.classList.remove('connection-lost');
-            } else {
-                statusEl.className = "status err";
-                statusEl.innerText = t.status_all_err || "Connection lost!";
-                document.body.classList.add('connection-lost');
-            }
+            updateStatusPill(hwSuccess, lhmSuccess);
 
             const now = Date.now();
             config.forEach((card, cIndex) => {
@@ -4275,12 +4775,20 @@
                         const formattedText = formatSensorValue(valObj.value, valObj.unit, chart.convert, chart.decimals);
                         const numericVal = getConvertedNumericValue(valObj.value, valObj.unit, chart.convert);
 
-                        if (valEl) valEl.innerText = formattedText;
+                        // Store last known value
+                        lastKnownValues[`chart_${chart.id}`] = { text: formattedText, numeric: numericVal };
+
+                        if (valEl) { valEl.innerText = formattedText; valEl.style.opacity = '1'; }
 
                         if (chartInstances[chart.id]) {
                             const history = chartHistories[chart.id];
                             history.push(numericVal);
                             if (history.length > MAX_HISTORY) history.shift();
+
+                            // Keep labels array same length as data
+                            const inst = chartInstances[chart.id];
+                            inst.data.labels = new Array(history.length).fill('');
+                            inst.data.datasets[0].data = history;
 
                             let colorSensorVal = undefined;
                             const dc = chart.dynamicColor;
@@ -4292,15 +4800,15 @@
                                 }
                             }
                             const dynColor = getDynamicChartColor(chart, numericVal, colorSensorVal);
-
-                            // Perf: set data + color on the dataset first, then redraw the canvas ONCE.
-                            // (Previously the chart was redrawn twice per poll: once for the data push,
-                            // then a second time inside applyChartColor even when the color was unchanged.)
-                            chartInstances[chart.id].data.datasets[0].data = history;
                             applyChartColor(chart.id, dynColor);
                         }
                     } else {
-                        if (valEl) valEl.innerText = "--";
+                        // Show last known value in grey, or -- if never received data
+                        const lk = lastKnownValues[`chart_${chart.id}`];
+                        if (valEl) {
+                            valEl.innerText = lk ? lk.text : '--';
+                            valEl.style.opacity = lk ? '0.45' : '1';
+                        }
                     }
                 });
 
@@ -4317,11 +4825,13 @@
                         const formattedText = formatSensorValue(valObj.value, valObj.unit, sensor.convert, sensor.decimals);
                         const numericVal = getConvertedNumericValue(valObj.value, valObj.unit, sensor.convert);
 
+                        // Store last known value
+                        lastKnownValues[`sensor_${sensor.id}`] = { text: formattedText, numeric: numericVal, unit: valObj.unit };
+
                         if (valEl) {
                             valEl.innerText = formattedText;
+                            valEl.style.opacity = '1';
                         }
-                        // Compute once, reuse for both the text color and the sparkline —
-                        // was being computed twice per sensor per poll (each re-sorting thresholds).
                         const dynColor = getSensorColor(sensor, numericVal);
                         if (valEl) valEl.style.color = dynColor || '';
 
@@ -4347,9 +4857,17 @@
                             cardHasAlert = true;
                         }
                     } else {
-                        if (valEl) valEl.innerText = "--";
-                        if (minEl) minEl.innerText = "--";
-                        if (maxEl) maxEl.innerText = "--";
+                        // Show last known value dimmed, or -- if never received
+                        const lk = lastKnownValues[`sensor_${sensor.id}`];
+                        if (valEl) {
+                            valEl.innerText = lk ? lk.text : '--';
+                            valEl.style.opacity = lk ? '0.45' : '1';
+                            valEl.style.color = '';
+                        }
+                        if (!lk) {
+                            if (minEl) minEl.innerText = '--';
+                            if (maxEl) maxEl.innerText = '--';
+                        }
                     }
                 });
 
@@ -4364,24 +4882,67 @@
             if (fetchCycleCount % 10 === 0) {
                 localStorage.setItem('remotehwinfo_session_minmax', JSON.stringify(sessionMinMax));
             }
-            isFetching = false;
+        }
+
+        let fetchStartedAt = 0;
+        let retryTimer = null;
+        let initialSettingsRendered = false;
+
+        // Guarded entry point. The lock is ALWAYS released (finally), and a stale lock older
+        // than 15 s is ignored, so one bad cycle can never stop polling permanently.
+        async function updateValues() {
+            if (isFetching && (Date.now() - fetchStartedAt) < 15000) return;
+            isFetching = true;
+            fetchStartedAt = Date.now();
+            try {
+                await runUpdateCycle();
+            } catch (e) {
+                console.warn('Update cycle error:', e);
+            } finally {
+                isFetching = false;
+            }
+
+            // First successful poll: persist the sensor list and fill the settings UI
+            if (!initialSettingsRendered && !lastCycleBothFailed) {
+                initialSettingsRendered = true;
+                try {
+                    localStorage.setItem('remotehwinfo_persistent_sensors', JSON.stringify(persistentSensorMap));
+                    renderSettingsDOM();
+                } catch (e) { console.warn(e); }
+            }
+
+            // Connection down: retry quickly instead of waiting a full refresh interval
+            if (lastCycleBothFailed && !retryTimer) {
+                retryTimer = setTimeout(() => { retryTimer = null; updateValues(); }, 1500);
+            }
         }
 
         const savedLang = localStorage.getItem('dashboard_lang') || 'en';
-        applyStoredTheme();
-        renderDashboardDOM();
-        renderSettingsDOM(true);
-        changeLanguage(savedLang);
-        loadSettingsFontSize();
-        loadBatteryIndicatorPref();
-        loadClockFormatPrefs();
-
-        fetchAllSensorsOnce().then(() => {
-            renderSettingsDOM(false);
-            updateValues();
+        [
+            ['applyStoredTheme',      () => applyStoredTheme()],
+            ['renderDashboardDOM',    () => renderDashboardDOM()],
+            ['changeLanguage',        () => changeLanguage(savedLang)],
+            ['loadSettingsFontSize',  () => loadSettingsFontSize()],
+            ['loadBatteryIndicator',  () => loadBatteryIndicatorPref()],
+            ['loadClockFormatPrefs',  () => loadClockFormatPrefs()]
+        ].forEach(([name, fn]) => {
+            try { fn(); } catch (e) { console.error('Init step failed: ' + name, e); }
         });
 
-        restartLoop();
+        // Quick parallel sensor map fetch with 1.5s timeout
+        // then immediately start the update loop
+        function initialConnect() {
+            restartLoop(); // starts the interval and the first poll immediately
+            // Fill settings fields from saved values without delaying the first request
+            setTimeout(() => { try { renderSettingsDOM(); } catch (e) { console.warn(e); } }, 50);
+        }
+
+        initialConnect();
+
+        // Reconnect immediately when the network returns / the screen wakes / page is restored
+        window.addEventListener('online', () => { updateValues(); });
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) updateValues(); });
+        window.addEventListener('pageshow', e => { if (e.persisted) restartLoop(); });
     </script>
     <script>
     // PWA Service Worker — caches the dashboard for offline/reconnect resilience
